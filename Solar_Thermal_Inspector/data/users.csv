@@ -1,0 +1,3 @@
+email,name,password_hash,role,date_inscription
+admin@solar.com,Administrateur,$2b$12$c9vCwKDUdkFl4VvL7GSoUevQyn30fX0xMIlpEgujo7/pCvzlWa7pi,manager,2026-05-05 20:23:07
+chaimaealla2005@gmail.com,Chaimae,$2b$12$SjMW3qMXYbJ0UMAxFoGm4O/TsMmuoM7xwDP98fARXUpyfFJfAfa5K,technician,2026-05-05 20:23:40
