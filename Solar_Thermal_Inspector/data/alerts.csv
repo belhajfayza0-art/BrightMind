@@ -1,0 +1,16 @@
+id,defect_type,severity,temperature,location,image_path,detected_at,status,taken_by,taken_at
+1,Shading,medium,47.7,"Ligne 10, Colonne 8",data/simulated_images\defect_Shading_20260507_141001.png,2026-05-07 14:10:01,taken,tech,2026-05-07 14:10:07
+2,Dust,low,37.3,"Ligne 3, Colonne 7",data/simulated_images\defect_Dust_20260507_153630.png,2026-05-07 15:36:30,taken,Chaimae,2026-05-07 15:36:36
+3,Broken Cell,critical,81.2,"Ligne 5, Colonne 12",data/simulated_images\defect_Broken Cell_20260507_161859.png,2026-05-07 16:18:59,taken,Chaimae,2026-05-07 16:19:11
+4,Broken Cell,critical,86.0,"Ligne 7, Colonne 11",data/simulated_images\defect_Broken Cell_20260507_163344.png,2026-05-07 16:33:44,taken,Chaimae,2026-05-07 16:33:51
+5,Hotspot,critical,95.0,"Ligne 2, Colonne 15",data/simulated_images\defect_Hotspot_20260507_185223.png,2026-05-07 18:52:23,taken,Chaimae,2026-05-07 18:53:02
+6,Shading,medium,49.1,"Ligne 3, Colonne 7",data/simulated_images\defect_Shading_20260507_205631.png,2026-05-07 20:56:31,taken,Chaimae,2026-05-07 20:56:49
+7,Crack,high,62.6,"Ligne 3, Colonne 7",data/simulated_images\defect_Crack_20260507_205649.png,2026-05-07 20:56:49,taken,Chaimae,2026-05-07 20:57:05
+8,Shading,medium,47.2,"Ligne 8, Colonne 2",data/simulated_images\defect_Shading_20260507_205722.png,2026-05-07 20:57:22,taken,Chaimae,2026-05-07 23:56:37
+9,Dust,low,41.8,"Ligne 5, Colonne 12",data/simulated_images\defect_Dust_20260507_235410.png,2026-05-07 23:54:10,taken,Chaimae,2026-05-08 00:01:46
+10,Broken Cell,critical,81.9,"Ligne 10, Colonne 8",data/simulated_images\defect_Broken Cell_20260507_235632.png,2026-05-07 23:56:34,taken,Chaimae,2026-05-08 00:00:37
+11,Broken Cell,critical,97.1,"Ligne 4, Colonne 3",data/simulated_images\defect_Broken Cell_20260507_235637.png,2026-05-07 23:56:37,taken,Chaimae,2026-05-08 00:02:35
+12,Broken Cell,critical,86.8,"Ligne 8, Colonne 2",data/simulated_images\defect_Broken Cell_20260508_000031.png,2026-05-08 00:00:31,pending,,
+13,Hotspot,critical,93.7,"Ligne 3, Colonne 7",data/simulated_images\defect_Hotspot_20260508_000718.png,2026-05-08 00:07:19,taken,Chaimae,2026-05-08 00:07:22
+14,Dust,low,37.9,"Ligne 4, Colonne 3",data/simulated_images\defect_Dust_20260508_000722.png,2026-05-08 00:07:22,taken,Chaimae,2026-05-08 01:32:47
+15,Shading,medium,51.6,"Ligne 4, Colonne 3",data/simulated_images\defect_Shading_20260508_005553.png,2026-05-08 00:55:53,pending,,

@@ -1,0 +1,11 @@
+id,defect_id,technician_id,technician_name,defect_type,severity,location,temperature,status,created_at,completed_at,notes
+1,1,1,Chaimae,Broken Cell,critical,"Ligne 7, Colonne 11",86.0,completed,2026-05-07 16:33:51,2026-05-07 16:37:42,Intervention terminée
+2,2,1,Chaimae,Hotspot,critical,"Ligne 2, Colonne 15",95.0,completed,2026-05-07 18:53:02,2026-05-07 18:53:27,Intervention terminée
+3,3,1,Chaimae,Shading,medium,"Ligne 3, Colonne 7",49.1,completed,2026-05-07 20:56:49,2026-05-07 23:54:18,Intervention terminée
+4,4,1,Chaimae,Crack,high,"Ligne 3, Colonne 7",62.6,completed,2026-05-07 20:57:05,2026-05-07 23:54:31,Intervention terminée
+5,5,1,Chaimae,Shading,medium,"Ligne 8, Colonne 2",47.2,completed,2026-05-07 23:56:37,2026-05-07 23:57:22,Intervention terminée
+6,6,1,Chaimae,Broken Cell,critical,"Ligne 10, Colonne 8",81.9,completed,2026-05-08 00:00:37,2026-05-08 00:01:24,Intervention terminée
+7,7,1,Chaimae,Dust,low,"Ligne 5, Colonne 12",41.8,completed,2026-05-08 00:01:47,2026-05-08 00:02:19,Intervention terminée
+8,8,1,Chaimae,Broken Cell,critical,"Ligne 4, Colonne 3",97.1,pending,2026-05-08 00:02:35,,
+9,9,1,Chaimae,Hotspot,critical,"Ligne 3, Colonne 7",93.7,pending,2026-05-08 00:07:22,,
+10,10,1,Chaimae,Dust,low,"Ligne 4, Colonne 3",37.9,completed,2026-05-08 01:32:47,2026-05-08 01:39:20,Intervention terminée

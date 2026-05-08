@@ -1,3 +1,5 @@
 email,name,password_hash,role,date_inscription
 admin@solar.com,Administrateur,$2b$12$c9vCwKDUdkFl4VvL7GSoUevQyn30fX0xMIlpEgujo7/pCvzlWa7pi,manager,2026-05-05 20:23:07
 chaimaealla2005@gmail.com,Chaimae,$2b$12$SjMW3qMXYbJ0UMAxFoGm4O/TsMmuoM7xwDP98fARXUpyfFJfAfa5K,technician,2026-05-05 20:23:40
+tech@solarthermal.com,tech,$2b$12$Gz7DPkq4Q05QBM3zH5jVyOreOoAm8cRiM7DrE/N1KN3pucnyIQfIe,technician,2026-05-07 00:13:28
+tech@solarthermal.com,tech,$2b$12$xZARJkVEvM0oxhWJbtirc.4dIsjrLzM840P.8xI0g/A1ztsIJ5Gp2,technician,2026-05-07 00:13:28
