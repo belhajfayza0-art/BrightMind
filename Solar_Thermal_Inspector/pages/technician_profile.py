@@ -13,6 +13,18 @@ from backend.technician_service import (
 from components.sidebar import render_sidebar
 from components.style import apply_style
 
+technician_zone = st.session_state.get('user_zone', 'Noor IV')
+
+# Informations spécifiques à la zone
+zone_info = {
+    "Noor I": {"name": "Noor I", "icon": "🔴", "type": "CSP - Miroirs paraboliques", "capacity": "160 MW"},
+    "Noor II": {"name": "Noor II", "icon": "🟠", "type": "CSP - Miroirs paraboliques", "capacity": "200 MW"},
+    "Noor III": {"name": "Noor III", "icon": "🟡", "type": "CSP - Tour solaire", "capacity": "150 MW"},
+    "Noor IV": {"name": "Noor IV", "icon": "🟣", "type": "Photovoltaïque", "capacity": "72 MW"},
+    "Midelt": {"name": "Midelt", "icon": "🟢", "type": "Mixte CSP + PV", "capacity": "800 MW"}
+}
+
+current_zone = zone_info.get(technician_zone, zone_info["Noor IV"])
 # Configuration de la page
 st.set_page_config(page_title="Mon Profil", page_icon="👤", layout="wide")
 st.session_state.current_page = 'profile'
@@ -42,6 +54,19 @@ with col_info1:
     st.write(f"**Nom :** {technician_name}")
     st.write(f"**Email :** {st.session_state.user_email}")
     st.write(f"**Rôle :** 🔧 Technicien de maintenance certifié")
+    
+    # 🆕 SECTION ZONE DÉTAILLÉE
+    st.markdown("---")
+    st.markdown("### 📍 Zone d'affectation")
+    
+    # Afficher la zone avec sa couleur
+    st.markdown(f"""
+    <div style="background: {current_zone['icon']}10; border-radius: 16px; padding: 0.8rem; border-left: 4px solid {'#FF6B6B' if technician_zone == 'Noor I' else '#FF9F43' if technician_zone == 'Noor II' else '#FDCB6E' if technician_zone == 'Noor III' else '#6C5CE7' if technician_zone == 'Noor IV' else '#00B894'};">
+        <div style="font-size: 1.2rem; font-weight: 600;">{current_zone['icon']} {current_zone['name']}</div>
+        <div style="font-size: 0.8rem; color: #6B7280;">{current_zone['type']}</div>
+        <div style="font-size: 0.8rem; font-weight: 500; color: {'#FF6B6B' if technician_zone == 'Noor I' else '#FF9F43' if technician_zone == 'Noor II' else '#FDCB6E' if technician_zone == 'Noor III' else '#6C5CE7' if technician_zone == 'Noor IV' else '#00B894'};">⚡ {current_zone['capacity']}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col_info2:
     st.subheader("🏆 Statistiques")

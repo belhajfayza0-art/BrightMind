@@ -170,8 +170,8 @@ def mark_all_notifications_read(technician_name):
     df.loc[df['technician_name'] == technician_name, 'read'] = True
     df.to_csv(NOTIFICATIONS_FILE, index=False)
 
-def create_mission(defect, technician_name):
-    """Crée une nouvelle mission pour un technicien"""
+def create_mission(defect, technician_name, zone):
+    """Crée une nouvelle mission avec la zone"""
     init_data_files()
     
     df = pd.read_csv(MISSIONS_FILE)
@@ -188,6 +188,7 @@ def create_mission(defect, technician_name):
         'location': defect['location'],
         'temperature': defect['temperature'],
         'status': 'pending',
+        'zone': zone,
         'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         'completed_at': '',
         'notes': ''
@@ -196,10 +197,43 @@ def create_mission(defect, technician_name):
     df = pd.concat([df, new_mission], ignore_index=True)
     df.to_csv(MISSIONS_FILE, index=False)
     
-    # Créer une notification
-    create_notification(technician_name, defect, new_id)
-    
     return new_id
+
+def get_technician_missions_by_zone(technician_name, technician_zone):
+    """Récupère les missions UNIQUEMENT de la zone du technicien"""
+    init_data_files()
+    
+    if not os.path.exists(MISSIONS_FILE):
+        return pd.DataFrame()
+    
+    df = pd.read_csv(MISSIONS_FILE)
+    
+    # Si colonne zone n'existe pas, l'ajouter
+    if 'zone' not in df.columns:
+        df['zone'] = 'Noor IV'
+        df.to_csv(MISSIONS_FILE, index=False)
+    
+    missions = df[(df['technician_name'] == technician_name) & 
+                  (df['zone'] == technician_zone)]
+    
+    return missions
+
+def get_technician_stats_by_zone(technician_name, technician_zone):
+    """Calcule les statistiques du technicien pour SA zone"""
+    df = get_technician_missions_by_zone(technician_name, technician_zone)
+    
+    total = len(df)
+    completed = len(df[df['status'] == 'completed'])
+    pending = len(df[df['status'] == 'pending'])
+    in_progress = len(df[df['status'] == 'in_progress'])
+    
+    return {
+        'total': total,
+        'completed': completed,
+        'pending': pending,
+        'in_progress': in_progress,
+        'completion_rate': round((completed / total * 100) if total > 0 else 0, 1)
+    }
 
 def create_notification(technician_name, defect, mission_id):
     """Crée une notification pour le technicien"""
@@ -227,3 +261,15 @@ def get_unread_notifications_count(technician_name):
     """Retourne le nombre de notifications non lues"""
     notifs = get_technician_notifications(technician_name)
     return len(notifs)
+
+def update_mission_notes(mission_id, notes):
+    """Met à jour les notes d'une mission (rapport)"""
+    init_data_files()
+    
+    df = pd.read_csv(MISSIONS_FILE)
+    
+    mask = df['id'] == mission_id
+    df.loc[mask, 'notes'] = str(notes)
+    
+    df.to_csv(MISSIONS_FILE, index=False)
+    return True

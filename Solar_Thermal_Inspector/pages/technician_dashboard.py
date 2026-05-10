@@ -10,9 +10,9 @@ from datetime import datetime
 from components.sidebar import render_sidebar
 from components.style import apply_style
 from backend.technician_service import (
-    get_technician_missions, get_technician_stats, create_mission
+    get_technician_missions, get_technician_stats, create_mission, update_mission_status
 )
-from backend.alert_service import get_pending_alerts
+from backend.alert_service import get_pending_alerts_by_zone
 
 # Configuration de la page
 st.set_page_config(page_title="Dashboard Technicien", page_icon="🔧", layout="wide")
@@ -25,46 +25,128 @@ if 'user_role' not in st.session_state or st.session_state.user_role != 'technic
 
 technician_name = st.session_state.user_name
 
+# ============================================
+# RÉCUPÉRATION DE LA ZONE ET PERSONNALISATION
+# ============================================
+
+# Récupérer la zone du technicien connecté
+technician_zone = st.session_state.get('user_zone', 'Noor IV')
+
+# Pour les statistiques
+from backend.technician_service import get_technician_stats_by_zone
+stats = get_technician_stats_by_zone(technician_name, technician_zone)
+
+# Pour les missions
+from backend.technician_service import get_technician_missions_by_zone
+missions = get_technician_missions_by_zone(technician_name, technician_zone)
+
+# Pour les alertes
+from backend.alert_service import get_pending_alerts_by_zone
+pending_alerts = get_pending_alerts_by_zone(technician_zone)
+# Informations spécifiques à la zone
+zone_info = {
+    "Noor I": {
+        "name": "Noor I",
+        "color": "#FF6B6B",
+        "icon": "🔴",
+        "type": "CSP - Miroirs paraboliques",
+        "capacity": "160 MW",
+        "anomalies": ["MirrorMisalignment", "AbsorberTubeDegradation", "HTFLeak"]
+    },
+    "Noor II": {
+        "name": "Noor II",
+        "color": "#FF9F43",
+        "icon": "🟠",
+        "type": "CSP - Miroirs paraboliques",
+        "capacity": "200 MW",
+        "anomalies": ["MirrorMisalignment", "AbsorberTubeDegradation", "HTFLeak"]
+    },
+    "Noor III": {
+        "name": "Noor III",
+        "color": "#FDCB6E",
+        "icon": "🟡",
+        "type": "CSP - Tour solaire",
+        "capacity": "150 MW",
+        "anomalies": ["TrackingFailure", "ReceiverTubeLeak", "ThermalGradientAnomaly"]
+    },
+    "Noor IV": {
+        "name": "Noor IV",
+        "color": "#6C5CE7",
+        "icon": "🟣",
+        "type": "Photovoltaïque",
+        "capacity": "72 MW",
+        "anomalies": ["Hotspot", "Crack", "Dust", "Shading", "Broken Cell"]
+    },
+    "Midelt": {
+        "name": "Midelt",
+        "color": "#00B894",
+        "icon": "🟢",
+        "type": "Mixte CSP + PV",
+        "capacity": "800 MW",
+        "anomalies": ["StringOpenCircuit", "StringReversedPolarity", "Hotspot", "Crack"]
+    }
+}
+
+current_zone_info = zone_info.get(technician_zone, zone_info["Noor IV"])
+
 # Application du style et du menu
 apply_style()
 render_sidebar(technician_name)
 
 # ============================================
-# ALERTE IA
+# ALERTE IA (FILTRÉE PAR ZONE)
 # ============================================
-pending_alerts = get_pending_alerts()
-if len(pending_alerts) > 0:
-    st.warning(f"🔔 {len(pending_alerts)} nouvelle(s) alerte(s) IA ! Cliquez sur 'Alertes IA' dans le menu.")
+# ============================================
+# ALERTE IA - Version finale
+# ============================================
+
+# Compter les alertes
+alerts_df = get_pending_alerts_by_zone(technician_zone)
+nb_alerts = len(alerts_df)
+
+if nb_alerts > 0:
+    # Utiliser les colonnes pour aligner message et bouton
+    col_msg, col_btn = st.columns([3, 1])
+    with col_msg:
+        st.error(f"🚨 {nb_alerts} ALERTE(S) IA DÉTECTÉE(S) ! Intervention requise.")
+    with col_btn:
+        if st.button("📋 VOIR LES ALERTES", type="primary", use_container_width=True):
+            st.switch_page("pages/technician_alerts.py")
+else:
+    st.success("✅ Aucune alerte IA. Tous les panneaux fonctionnent normalement.")
 
 # ============================================
 # CARTE DE BIENVENUE
 # ============================================
+
 col_welcome1, col_welcome2 = st.columns([2, 1])
 
 with col_welcome1:
     st.markdown(f"""
     <div class="welcome-card">
-        <div style="font-size: 1.8rem; font-weight: 600;">👋 Bonjour {technician_name}</div>
-        <div style="opacity: 0.9; margin-top: 0.5rem;">
+        <div style="font-size: 1.5rem; font-weight: 600; margin: 0.5rem 0;">👋 Bonjour {technician_name}</div>
+        <div style="opacity: 0.9; margin: 0.5rem 0;">
             Vous avez des missions à traiter aujourd'hui.<br>
             Consultez la liste ci-dessous pour commencer.
         </div>
-        <div style="margin-top: 1rem;">
+        <div style="margin-top: 0.8rem;">
             <span class="badge badge-low">✅ Dernière mission: terminée le {datetime.now().strftime('%d/%m')}</span>
+        </div>
+        <div style="margin-top: 0.8rem; font-size: 0.7rem; opacity: 0.7;">
+            Technicien: {technician_name}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 with col_welcome2:
     st.markdown(f"""
-    <div style="background: white; border-radius: 20px; padding: 1rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column; justify-content: center;">
-        <div style="font-size: 2rem;">📍</div>
-        <div style="font-weight: 600; color: var(--vert);">À {random.randint(1, 5)} km du site</div>
-        <div style="font-size: 0.7rem; color: var(--gris);">Station solaire principale</div>
+    <div style="background: {current_zone_info['color']}10; border-radius: 20px; padding: 1rem; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column; justify-content: center; border: 1px solid {current_zone_info['color']}30;">
+        <div style="font-size: 2rem;">{current_zone_info['icon']}</div>
+        <div style="font-weight: 600; color: {current_zone_info['color']};">{current_zone_info['name']}</div>
+        <div style="font-size: 0.7rem; color: var(--gris);">{current_zone_info['type']}</div>
+        <div style="font-size: 0.7rem; color: var(--gris); margin-top: 0.3rem;">{current_zone_info['capacity']}</div>
     </div>
     """, unsafe_allow_html=True)
-
-st.markdown("---")
 
 # ============================================
 # STATISTIQUES
@@ -120,27 +202,22 @@ col_left, col_right = st.columns([1, 1])
 with col_left:
     st.markdown("### 🖼️ Derniers défauts détectés")
     
-    # Récupérer les vraies missions du technicien
     missions = get_technician_missions(1, technician_name)
     
-    # Créer la liste des défauts à partir des missions récentes
     recent_defects = []
-    for _, mission in missions.tail(3).iterrows():  # 3 dernières missions
+    for _, mission in missions.tail(3).iterrows():
         severity = mission['severity']
         temp = mission['temperature']
         
-        # Déterminer l'icône selon le type de défaut
         icon_map = {
-            "Hotspot": "🔥",
-            "Crack": "💔",
-            "Dust": "🌫️",
-            "Shading": "🌑",
-            "Broken Cell": "⚡"
+            "Hotspot": "🔥", "Crack": "💔", "Dust": "🌫️",
+            "Shading": "🌑", "Broken Cell": "⚡",
+            "MirrorMisalignment": "🪞", "AbsorberTubeDegradation": "🔧",
+            "TrackingFailure": "🎯", "ReceiverTubeLeak": "💧",
+            "StringOpenCircuit": "⚡", "StringReversedPolarity": "🔄"
         }
         icon = icon_map.get(mission['defect_type'], "🔧")
         
-        # Déterminer la date relative
-        from datetime import datetime
         try:
             created_date = datetime.strptime(mission['created_at'], "%Y-%m-%d %H:%M:%S")
             days_ago = (datetime.now() - created_date).days
@@ -162,7 +239,6 @@ with col_left:
             "icon": icon
         })
     
-    # AFFICHAGE DES DÉFAUTS (en dehors de la boucle de collecte)
     if len(recent_defects) > 0:
         for defect in recent_defects:
             temp_class = "temp-critical" if defect['temp'] > 75 else "temp-high" if defect['temp'] > 60 else "temp-normal"
@@ -185,6 +261,7 @@ with col_left:
             """, unsafe_allow_html=True)
     else:
         st.info("Aucun défaut détecté pour le moment.")
+
 # COLONNE DROITE : Missions en cours
 with col_right:
     st.markdown("### 🔧 Missions en cours")
@@ -229,7 +306,6 @@ with col_right:
             with col_btn2:
                 if mission['status'] == 'pending':
                     if st.button(f"🚀 Commencer", key=f"start_{mission['id']}"):
-                        from backend.technician_service import update_mission_status
                         update_mission_status(mission['id'], 'in_progress')
                         st.rerun()
                 elif mission['status'] == 'in_progress':
@@ -245,156 +321,127 @@ st.markdown("---")
 # TEMPS D'INTERVENTION
 # ============================================
 # ============================================
-# SECTION : TEMPS D'INTERVENTION PAR TYPE DE DÉFAUT
+# TEMPS D'INTERVENTION PAR ZONE
 # ============================================
-
 st.subheader("⏱️ Temps d'intervention par type de défaut")
 
-# Calculer les vrais temps à partir des missions du technicien
-missions = get_technician_missions(1, technician_name)
+# Récupérer la zone du technicien
+technician_zone = st.session_state.get('user_zone', 'Noor IV')
+
+# Définir les anomalies par zone
+anomalies_by_zone = {
+    "Noor I": {
+        "MirrorMisalignment": {"icon": "🪞", "estimated": 50, "risk": "high"},
+        "AbsorberTubeDegradation": {"icon": "🔧", "estimated": 70, "risk": "critical"}
+    },
+    "Noor II": {
+        "MirrorMisalignment": {"icon": "🪞", "estimated": 50, "risk": "high"},
+        "AbsorberTubeDegradation": {"icon": "🔧", "estimated": 70, "risk": "critical"},
+        "HTFLeak": {"icon": "💧", "estimated": 80, "risk": "critical"}
+    },
+    "Noor III": {
+        "TrackingFailure": {"icon": "🎯", "estimated": 40, "risk": "high"},
+        "ReceiverTubeLeak": {"icon": "💧", "estimated": 80, "risk": "critical"},
+        "ThermalGradientAnomaly": {"icon": "🌡️", "estimated": 35, "risk": "medium"}
+    },
+    "Noor IV": {
+        "Hotspot": {"icon": "🔥", "estimated": 35, "risk": "critical"},
+        "Crack": {"icon": "💔", "estimated": 45, "risk": "high"},
+        "Dust": {"icon": "🌫️", "estimated": 20, "risk": "low"},
+        "Shading": {"icon": "🌑", "estimated": 30, "risk": "medium"},
+        "Broken Cell": {"icon": "⚡", "estimated": 60, "risk": "critical"}
+    },
+    "Midelt": {
+        "StringOpenCircuit": {"icon": "⚡", "estimated": 55, "risk": "critical"},
+        "StringReversedPolarity": {"icon": "🔄", "estimated": 45, "risk": "high"},
+        "Hotspot": {"icon": "🔥", "estimated": 35, "risk": "critical"},
+        "Crack": {"icon": "💔", "estimated": 45, "risk": "high"}
+    }
+}
+
+# Récupérer les anomalies de la zone
+zone_anomalies = anomalies_by_zone.get(technician_zone, anomalies_by_zone["Noor IV"])
+
+# Calculer les temps réels à partir des missions complétées
+missions = get_technician_missions_by_zone(technician_name, technician_zone)
 completed_missions = missions[missions['status'] == 'completed']
 
-# Dictionnaire pour stocker les temps moyens par type de défaut
-defect_times = {
-    "Hotspot": {"total": 0, "count": 0, "estimated": 35, "icon": "🔥", "risk": "high"},
-    "Crack": {"total": 0, "count": 0, "estimated": 45, "icon": "💔", "risk": "high"},
-    "Dust": {"total": 0, "count": 0, "estimated": 20, "icon": "🌫️", "risk": "low"},
-    "Shading": {"total": 0, "count": 0, "estimated": 30, "icon": "🌑", "risk": "medium"},
-    "Broken Cell": {"total": 0, "count": 0, "estimated": 60, "icon": "⚡", "risk": "critical"}
-}
-
-# Couleurs pastel selon le niveau de risque
-risk_colors = {
-    "critical": {"bg": "#FEE2E2", "text": "#991B1B", "border": "#FCA5A5"},  # Rouge pastel (très risque)
-    "high": {"bg": "#FFE8D9", "text": "#8B5A2B", "border": "#FFCDA8"},       # Orange pastel (risque élevé)
-    "medium": {"bg": "#FEF3C7", "text": "#92400E", "border": "#FDE68A"},      # Jaune pastel (risque moyen)
-    "low": {"bg": "#FFFBEB", "text": "#A16207", "border": "#FEF3C7"}          # Jaune clair pastel (risque faible)
-}
-
-# Parcourir les missions complétées
+# Compter les temps réels
+real_times = {}
 for _, mission in completed_missions.iterrows():
     defect_type = mission['defect_type']
-    if defect_type in defect_times:
+    if defect_type in zone_anomalies:
+        if defect_type not in real_times:
+            real_times[defect_type] = {"total": 0, "count": 0}
+        # Simuler un temps basé sur la température
         temp = mission['temperature']
         simulated_time = 20 + (temp - 35) * 0.5
         simulated_time = max(15, min(90, simulated_time))
-        defect_times[defect_type]["total"] += simulated_time
-        defect_times[defect_type]["count"] += 1
+        real_times[defect_type]["total"] += simulated_time
+        real_times[defect_type]["count"] += 1
 
-# Créer les colonnes
-col_time1, col_time2, col_time3 = st.columns(3)
+# Afficher les cartes (2 ou 3 par ligne selon le nombre)
+anomaly_list = list(zone_anomalies.keys())
+num_anomalies = len(anomaly_list)
 
-# Filtrer les types qui ont des données
-active_defects = {k: v for k, v in defect_times.items() if v['count'] > 0}
-
-if len(active_defects) > 0:
-    defect_list = list(active_defects.keys())
-    
-    for i, defect_type in enumerate(defect_list[:3]):
-        data = defect_times[defect_type]
-        avg_time = round(data["total"] / data["count"]) if data["count"] > 0 else data["estimated"]
-        estimated = data["estimated"]
-        diff = avg_time - estimated
-        diff_text = f"{'+' if diff > 0 else ''}{diff} min"
-        icon = data["icon"]
-        risk = data["risk"]
-        colors = risk_colors[risk]
-        
-        with [col_time1, col_time2, col_time3][i]:
-            st.markdown(f"""
-            <div style="background: {colors['bg']}; 
-                        border-radius: 20px; 
-                        padding: 1rem; 
-                        text-align: center; 
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                        border-left: 4px solid {colors['border']};">
-                <div style="font-size: 1rem; font-weight: 600;">{icon} {defect_type}</div>
-                <div style="font-size: 1.8rem; font-weight: 700; color: {colors['text']};">{avg_time} min</div>
-                <div style="font-size: 0.7rem; color: #6B7280;">vs estimé {estimated} min</div>
-                <div style="font-size: 0.65rem; color: {colors['text']}; margin-top: 0.3rem;">{diff_text}</div>
-                <div style="font-size: 0.6rem; color: #6B7280;">Basé sur {data['count']} intervention(s)</div>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    if len(defect_list) > 3:
-        st.markdown("---")
-        col_time4, col_time5 = st.columns(2)
-        for i, defect_type in enumerate(defect_list[3:]):
-            data = defect_times[defect_type]
-            avg_time = round(data["total"] / data["count"]) if data["count"] > 0 else data["estimated"]
-            estimated = data["estimated"]
-            diff = avg_time - estimated
-            diff_text = f"{'+' if diff > 0 else ''}{diff} min"
-            icon = data["icon"]
-            risk = data["risk"]
-            colors = risk_colors[risk]
-            
-            with [col_time4, col_time5][i]:
-                st.markdown(f"""
-                <div style="background: {colors['bg']}; 
-                            border-radius: 20px; 
-                            padding: 1rem; 
-                            text-align: center; 
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                            border-left: 4px solid {colors['border']};">
-                    <div style="font-size: 1rem; font-weight: 600;">{icon} {defect_type}</div>
-                    <div style="font-size: 1.8rem; font-weight: 700; color: {colors['text']};">{avg_time} min</div>
-                    <div style="font-size: 0.7rem; color: #6B7280;">vs estimé {estimated} min</div>
-                    <div style="font-size: 0.65rem; color: {colors['text']}; margin-top: 0.3rem;">{diff_text}</div>
-                    <div style="font-size: 0.6rem; color: #6B7280;">Basé sur {data['count']} intervention(s)</div>
-                </div>
-                """, unsafe_allow_html=True)
-
+if num_anomalies > 0:
+    # Créer les colonnes (3 max par ligne)
+    for i in range(0, num_anomalies, 3):
+        cols = st.columns(min(3, num_anomalies - i))
+        for j, col in enumerate(cols):
+            if i + j < num_anomalies:
+                defect_type = anomaly_list[i + j]
+                data = zone_anomalies[defect_type]
+                
+                # Utiliser le temps réel si disponible
+                if defect_type in real_times:
+                    avg_time = round(real_times[defect_type]["total"] / real_times[defect_type]["count"])
+                    count = real_times[defect_type]["count"]
+                    source = f"Basé sur {count} intervention(s)"
+                else:
+                    avg_time = data["estimated"]
+                    source = "Valeur estimée (aucune intervention)"
+                
+                estimated = data["estimated"]
+                diff = avg_time - estimated
+                diff_text = f"{'+' if diff > 0 else ''}{diff} min"
+                
+                # Couleurs selon risque
+                if data["risk"] == "critical":
+                    bg_color = "#FEE2E2"
+                    text_color = "#991B1B"
+                    border_color = "#FCA5A5"
+                elif data["risk"] == "high":
+                    bg_color = "#FFE8D9"
+                    text_color = "#8B5A2B"
+                    border_color = "#FFCDA8"
+                else:
+                    bg_color = "#FEF3C7"
+                    text_color = "#92400E"
+                    border_color = "#FDE68A"
+                
+                with col:
+                    st.markdown(f"""
+                    <div style="background: {bg_color}; border-radius: 20px; padding: 1rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid {border_color};">
+                        <div style="font-size: 1rem; font-weight: 600;">{data['icon']} {defect_type}</div>
+                        <div style="font-size: 1.8rem; font-weight: 700; color: {text_color};">{avg_time} min</div>
+                        <div style="font-size: 0.7rem; color: #6B7280;">vs estimé {estimated} min</div>
+                        <div style="font-size: 0.65rem; color: {text_color}; margin-top: 0.3rem;">{diff_text}</div>
+                        <div style="font-size: 0.6rem; color: #6B7280;">{source}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
 else:
-    # Aucune mission complétée - valeurs par défaut avec couleurs pastel
-    col_time1, col_time2, col_time3 = st.columns(3)
-    
-    with col_time1:
-        st.markdown("""
-        <div style="background: #FEE2E2; border-radius: 20px; padding: 1rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #FCA5A5;">
-            <div style="font-size: 1rem; font-weight: 600;">🔥 Hotspot</div>
-            <div style="font-size: 1.8rem; font-weight: 700; color: #991B1B;">32 min</div>
-            <div style="font-size: 0.7rem; color: #6B7280;">vs estimé 35 min</div>
-            <div style="font-size: 0.6rem; color: #6B7280;">Basé sur 0 intervention</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_time2:
-        st.markdown("""
-        <div style="background: #FED7AA; border-radius: 20px; padding: 1rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #FDBA74;">
-            <div style="font-size: 1rem; font-weight: 600;">💔 Crack</div>
-            <div style="font-size: 1.8rem; font-weight: 700; color: #9A3412;">48 min</div>
-            <div style="font-size: 0.7rem; color: #6B7280;">vs estimé 45 min</div>
-            <div style="font-size: 0.6rem; color: #6B7280;">Basé sur 0 intervention</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_time3:
-        st.markdown("""
-        <div style="background: #FEF3C7; border-radius: 20px; padding: 1rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #FDE68A;">
-            <div style="font-size: 1rem; font-weight: 600;">🌫️ Dust</div>
-            <div style="font-size: 1.8rem; font-weight: 700; color: #92400E;">18 min</div>
-            <div style="font-size: 0.7rem; color: #6B7280;">vs estimé 20 min</div>
-            <div style="font-size: 0.6rem; color: #6B7280;">Basé sur 0 intervention</div>
-        </div>
-        """, unsafe_allow_html=True)
+    st.info(f"Aucune anomalie définie pour la zone {technician_zone}.")
 
-st.markdown("---")
 # ============================================
 # ACTIVITÉS RÉCENTES
 # ============================================
-
 st.subheader("📋 Activités récentes")
 
-# Récupérer les vraies missions
 missions = get_technician_missions(1, technician_name)
-
-# Créer la liste des activités à partir des vraies missions
 activities = []
 
-# Missions en cours
 for _, mission in missions.iterrows():
-    from datetime import datetime
     try:
         created_date = datetime.strptime(mission['created_at'], "%Y-%m-%d %H:%M:%S")
         days_ago = (datetime.now() - created_date).days
@@ -414,7 +461,6 @@ for _, mission in missions.iterrows():
     except:
         time_str = mission['created_at'][:10]
     
-    # Activité selon le statut
     if mission['status'] == 'pending':
         activities.append({
             "icon": "🆕",
@@ -437,10 +483,8 @@ for _, mission in missions.iterrows():
             "type": "success"
         })
 
-# Trier par date (plus récent en premier)
 activities.sort(key=lambda x: x['time'], reverse=False)
 
-# Afficher les 5 activités les plus récentes
 if len(activities) > 0:
     for activity in activities[:5]:
         icon_class = f"activity-icon-{activity['type']}"
@@ -456,6 +500,47 @@ if len(activities) > 0:
 else:
     st.info("Aucune activité récente.")
 
+st.markdown("---")
+
 # ============================================
 # MODE TEST
 # ============================================
+with st.expander("🔧 Mode test - Créer des missions"):
+    st.warning("⚠️ Mode de démonstration - Permet de créer des missions de test")
+    
+    col_test1, col_test2, col_test3 = st.columns(3)
+    with col_test1:
+        if st.button("🔥 Créer Hotspot (Urgent)", use_container_width=True):
+            test_defect = {
+                'class_name': 'Hotspot',
+                'severity': 'critical',
+                'location': f'{technician_zone}, Ligne 3, Colonne 7',
+                'temperature': 87.5
+            }
+            create_mission(test_defect, technician_name)
+            st.success("Mission créée !")
+            st.rerun()
+    
+    with col_test2:
+        if st.button("💔 Créer Crack (Haute)", use_container_width=True):
+            test_defect = {
+                'class_name': 'Crack',
+                'severity': 'high',
+                'location': f'{technician_zone}, Ligne 8, Colonne 2',
+                'temperature': 65.2
+            }
+            create_mission(test_defect, technician_name)
+            st.success("Mission créée !")
+            st.rerun()
+    
+    with col_test3:
+        if st.button("🌫️ Créer Dust (Basse)", use_container_width=False):
+            test_defect = {
+                'class_name': 'Dust',
+                'severity': 'low',
+                'location': f'{technician_zone}, Ligne 2, Colonne 15',
+                'temperature': 42.0
+            }
+            create_mission(test_defect, technician_name)
+            st.success("Mission créée !")
+            st.rerun()

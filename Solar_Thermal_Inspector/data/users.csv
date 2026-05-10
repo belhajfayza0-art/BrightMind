@@ -1,5 +1,12 @@
-email,name,password_hash,role,date_inscription
-admin@solar.com,Administrateur,$2b$12$c9vCwKDUdkFl4VvL7GSoUevQyn30fX0xMIlpEgujo7/pCvzlWa7pi,manager,2026-05-05 20:23:07
-chaimaealla2005@gmail.com,Chaimae,$2b$12$SjMW3qMXYbJ0UMAxFoGm4O/TsMmuoM7xwDP98fARXUpyfFJfAfa5K,technician,2026-05-05 20:23:40
-tech@solarthermal.com,tech,$2b$12$Gz7DPkq4Q05QBM3zH5jVyOreOoAm8cRiM7DrE/N1KN3pucnyIQfIe,technician,2026-05-07 00:13:28
-tech@solarthermal.com,tech,$2b$12$xZARJkVEvM0oxhWJbtirc.4dIsjrLzM840P.8xI0g/A1ztsIJ5Gp2,technician,2026-05-07 00:13:28
+email,name,password_hash,role,zone,date_inscription
+manager@solarthermal.com,Admin,$2b$12$...,manager,Noor IV,2026-05-10
+tech_a@solarthermal.com,Technicien A,$2b$12$...,technician,Noor I,2026-05-10
+tech_b@solarthermal.com,Technicien B,$2b$12$...,technician,Noor II,2026-05-10
+tech_c@solarthermal.com,Technicien C,$2b$12$...,technician,Noor III,2026-05-10
+tech_d@solarthermal.com,Technicien D,$2b$12$...,technician,Noor IV,2026-05-10
+chaimaealla2005@gmail.com,Alla Chaimae,$2b$12$DkJRsMniklyn2pDzGXIm7ef6YwznLcYjGvemUNEmjHqo9Qsd4iU3K,technician,Noor I,2026-05-10 01:37:29
+g.earthengine2025@gmail.com,Mohammed Alla ,$2b$12$Mn.MqQXwjXk2KZ1wo/Ev4u/L6SPod22iqO4Zv.XXLCmRwP3JioLnO,technician,Noor IV,2026-05-10 03:15:19
+chaemuse1234@gmail.com,Assia,$2b$12$SdubsJAHyfI.7a0SDfSf8.brtBWbfHIwpp00FJYtACH/eoJhxMmk2,technician,Noor II,2026-05-10 12:55:57
+tech_3@solarthermal.com,tech,$2b$12$vUnHTHuLyw9F1vQ1vdzaauquP1puzaIsMje4VXUQpQKPTbyMH34hm,technician,Noor III,2026-05-10 12:59:15
+tech_midlte@solarthermal.com,tech2,$2b$12$laTVsOgR1fyjA4Q.SBwdL.zy8cJsdzmmYKPtxCL2QcPrFBTHxafT2,technician,Midelt,2026-05-10 13:03:45
+tech_1@solarthermal.com,tech3,$2b$12$12OMXGonMjI7yVDU7wLz5uyxFiu3zSdo4t4oSWiMpH8KT0eGv0xO.,technician,Noor I,2026-05-10 15:46:42

@@ -110,15 +110,51 @@ else:
                     st.switch_page("pages/technician_mission_detail.py")
     
     # Missions terminées
+    # Dans la section des missions terminées, ajoutez :
     if len(completed) > 0:
-        with st.expander(f"✅ Missions terminées ({len(completed)})"):
-            for _, mission in completed.tail(10).iterrows():
-                st.markdown(f"""
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #e5e7eb;">
-                    <div>
-                        <span style="font-weight: 500;">✅ {mission['defect_type']}</span>
-                        <div style="font-size: 0.75rem; color: #6b7280;">📍 {mission['location']}</div>
-                    </div>
-                    <div style="font-size: 0.7rem; color: #6b7280;">📅 {mission['completed_at'][:16] if mission['completed_at'] else mission['created_at'][:16]}</div>
-                </div>
-                """, unsafe_allow_html=True)
+        st.subheader(f"✅ Missions terminées ({len(completed)})")
+        for _, mission in completed.tail(10).iterrows():
+            with st.expander(f"✅ {mission['defect_type']} - {mission['location']}"):
+                st.write(f"**Terminée le :** {mission['completed_at']}")
+                st.write(f"**Temps estimé :** 45 minutes")
+                if mission['notes'] and mission['notes'] != '':
+                    st.write(f"**Rapport :** {mission['notes']}")
+                else:
+                    st.write("**Rapport :** Aucun rapport disponible")
+                
+                # 🔧 AJOUTER LE BOUTON MODIFIER
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button(f"📝 Modifier le rapport", key=f"edit_{mission['id']}"):
+                        st.session_state.edit_mission_id = mission['id']
+                        st.session_state.edit_mission_notes = mission['notes']
+                        st.session_state.show_edit_form = True
+                
+                with col2:
+                    if st.button(f"🔍 Voir détails", key=f"view_{mission['id']}"):
+                        st.session_state.selected_mission = mission['id']
+                        st.switch_page("pages/technician_mission_detail.py")
+
+    # Formulaire de modification du rapport
+    if st.session_state.get('show_edit_form', False):
+        st.markdown("---")
+        st.subheader("📝 Modifier le rapport d'intervention")
+        
+        mission_id = st.session_state.edit_mission_id
+        current_notes = st.session_state.edit_mission_notes
+        
+        new_notes = st.text_area("Nouvelles notes", value=current_notes if current_notes else "", height=150)
+        
+        col_btn1, col_btn2 = st.columns(2)
+        with col_btn1:
+            if st.button("💾 Sauvegarder les modifications", type="primary"):
+                from backend.technician_service import update_mission_notes
+                update_mission_notes(mission_id, new_notes)
+                st.success("✅ Rapport modifié avec succès !")
+                st.session_state.show_edit_form = False
+                st.rerun()
+        
+        with col_btn2:
+            if st.button("❌ Annuler"):
+                st.session_state.show_edit_form = False
+                st.rerun()

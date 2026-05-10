@@ -1,13 +1,14 @@
 """
 Carte des défauts - Station Noor Ouarzazate
-Affiche uniquement les panneaux avec des défauts détectés
+La carte se centre automatiquement sur la zone du technicien
 """
 
 import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
-from backend.technician_service import get_technician_missions
+from backend.technician_service import get_technician_missions_by_zone
+from backend.alert_service import get_pending_alerts_by_zone
 from components.sidebar import render_sidebar
 from components.style import apply_style
 
@@ -19,67 +20,71 @@ if 'user_role' not in st.session_state or st.session_state.user_role != 'technic
     st.stop()
 
 technician_name = st.session_state.user_name
+technician_zone = st.session_state.get('user_zone', 'Noor IV')
 
 apply_style()
 render_sidebar(technician_name)
 
-st.title("🗺️ Carte des défauts - Station Noor Ouarzazate")
-st.markdown("Localisation des panneaux solaires nécessitant une intervention")
+st.title(f"🗺️ Carte des défauts - Zone {technician_zone}")
+st.markdown(f"Localisation des panneaux solaires nécessitant une intervention dans la zone **{technician_zone}**")
 
 # ============================================
-# COORDONNÉES DE LA STATION
+# COORDONNÉES PAR ZONE
 # ============================================
-station_lat = 31.0106
-station_lon = -6.8626
-
-# ============================================
-# RÉCUPÉRER LES MISSIONS AVEC DÉFAUTS
-# ============================================
-missions = get_technician_missions(1, technician_name)
-
-# Afficher toutes les missions (pending et in_progress)
-active_defects = missions[missions['status'].isin(['pending', 'in_progress'])]
-
-# Afficher un message de débogage (optionnel, à retirer après)
-# st.write(f"Nombre total de missions actives trouvées : {len(active_defects)}")
-
-# ============================================
-# DICTIONNAIRE DES COORDONNÉES PAR LOCALISATION
-# ============================================
-location_coords = {
-    "Ligne 1, Colonne 4": (station_lat + 0.0005, station_lon - 0.0005),
-    "Ligne 2, Colonne 15": (station_lat + 0.0004, station_lon - 0.0001),
-    "Ligne 3, Colonne 7": (station_lat + 0.0003, station_lon - 0.0002),
-    "Ligne 4, Colonne 3": (station_lat + 0.0001, station_lon + 0.0001),
-    "Ligne 5, Colonne 12": (station_lat + 0.0002, station_lon + 0.0002),
-    "Ligne 6, Colonne 8": (station_lat, station_lon + 0.0003),
-    "Ligne 7, Colonne 11": (station_lat - 0.0001, station_lon + 0.0002),
-    "Ligne 8, Colonne 2": (station_lat - 0.0002, station_lon + 0.0001),
-    "Ligne 9, Colonne 5": (station_lat - 0.0003, station_lon),
-    "Ligne 10, Colonne 8": (station_lat - 0.0002, station_lon - 0.0002),
-    "Ligne 11, Colonne 3": (station_lat - 0.0001, station_lon - 0.0003),
-    "Ligne 12, Colonne 9": (station_lat, station_lon - 0.0002),
+zone_coords = {
+    "Noor I": {"lat": 31.0106, "lon": -6.8626, "zoom": 15},
+    "Noor II": {"lat": 31.0377, "lon": -6.8696, "zoom": 15},
+    "Noor III": {"lat": 31.0623, "lon": -6.8704, "zoom": 15},
+    "Noor IV": {"lat": 31.0218, "lon": -6.8306, "zoom": 15},
+    "Midelt": {"lat": 32.6850, "lon": -4.7350, "zoom": 14},
 }
 
+# Récupérer les coordonnées de la zone
+center = zone_coords.get(technician_zone, zone_coords["Noor IV"])
+station_lat = center["lat"]
+station_lon = center["lon"]
+zoom_start = center["zoom"]
+
 # ============================================
-# CRÉER LA CARTE
+# RÉCUPÉRER LES DÉFAUTS DE LA ZONE UNIQUEMENT
+# ============================================
+# Récupérer les missions en cours (pending ou in_progress) de la zone
+missions = get_technician_missions_by_zone(technician_name, technician_zone)
+active_defects = missions[missions['status'].isin(['pending', 'in_progress'])]
+
+# ============================================
+# CRÉER LA CARTE CENTRÉE SUR LA BONNE ZONE
 # ============================================
 m = folium.Map(
     location=[station_lat, station_lon],
-    zoom_start=15,
+    zoom_start=zoom_start,
     tiles='OpenStreetMap'
 )
 
-# Marqueur de la station
+# Marqueur de la zone
 folium.Marker(
     location=[station_lat, station_lon],
-    popup="Station Noor Ouarzazate",
+    popup=f"Zone {technician_zone}",
     icon=folium.Icon(color='green', icon='info-sign'),
-    tooltip="Station principale"
+    tooltip=f"Zone {technician_zone}"
 ).add_to(m)
 
 # ============================================
-# AJOUTER TOUS LES DÉFAUTS SUR LA CARTE
+# DÉCALAGES POUR SIMULER DES POSITIONS DANS LA ZONE
+# ============================================
+# Ces décalages sont différents pour chaque zone
+zone_offsets = {
+    "Noor I": [(0.0005, -0.0003), (0.0002, 0.0002), (-0.0001, 0.0004), (0.0003, -0.0001)],
+    "Noor II": [(0.0004, -0.0002), (0.0001, 0.0003), (-0.0002, 0.0005), (0.0002, -0.0002)],
+    "Noor III": [(0.0003, -0.0001), (0.0002, 0.0004), (-0.0003, 0.0003), (0.0001, -0.0003)],
+    "Noor IV": [(0.0006, -0.0004), (0.0003, 0.0001), (-0.0002, 0.0006), (0.0004, -0.0002)],
+    "Midelt": [(0.0008, -0.0005), (0.0004, 0.0002), (-0.0003, 0.0007), (0.0005, -0.0003)]
+}
+
+offsets = zone_offsets.get(technician_zone, zone_offsets["Noor IV"])
+
+# ============================================
+# AJOUTER LES DÉFAUTS SUR LA CARTE (UNIQUEMENT CEUX DE LA ZONE)
 # ============================================
 if len(active_defects) > 0:
     for idx, (_, mission) in enumerate(active_defects.iterrows()):
@@ -94,16 +99,13 @@ if len(active_defects) > 0:
             color = 'yellow'
             icon = 'info-sign'
         
-        # Récupérer les coordonnées selon la localisation
-        loc_key = mission['location']
-        if loc_key in location_coords:
-            lat, lon = location_coords[loc_key]
-        else:
-            # Coordonnées par défaut avec un décalage basé sur l'index
-            lat = station_lat + (idx * 0.0001)
-            lon = station_lon - (idx * 0.0001)
+        # Utiliser un offset différent pour chaque défaut (pour les répartir dans la zone)
+        offset_idx = idx % len(offsets)
+        lat_offset, lon_offset = offsets[offset_idx]
+        lat = station_lat + lat_offset
+        lon = station_lon + lon_offset
         
-        # Ajouter le marqueur du défaut
+        # Ajouter le marqueur
         folium.Marker(
             location=[lat, lon],
             popup=f"""
@@ -120,17 +122,13 @@ if len(active_defects) > 0:
         # Cercle autour du défaut
         folium.Circle(
             location=[lat, lon],
-            radius=40,
+            radius=50,
             color=color,
             fill=True,
-            fill_opacity=0.3,
-            popup=f"Zone: {mission['defect_type']}"
+            fill_opacity=0.3
         ).add_to(m)
-        
-        # Afficher un message de confirmation (optionnel)
-        # st.write(f"✅ Défaut ajouté : {mission['defect_type']} - {mission['location']}")
 else:
-    st.info("✅ Aucun défaut actif. Tous les panneaux sont en bon état.")
+    st.info(f"✅ Aucun défaut actif dans la zone {technician_zone}.")
 
 # ============================================
 # LÉGENDE
@@ -141,7 +139,7 @@ legend_html = """
     🔴 <span style="color:red">●</span> Critique (urgent)<br>
     🟠 <span style="color:orange">●</span> Haute priorité<br>
     🟡 <span style="color:gold">●</span> Priorité normale<br>
-    🟢 <span style="color:green">●</span> Station
+    🟢 <span style="color:green">●</span> Zone {technician_zone}
 </div>
 """
 m.get_root().html.add_child(folium.Element(legend_html))
@@ -155,8 +153,8 @@ with col_map:
     folium_static(m, width=700, height=500)
 
 with col_info:
-    st.markdown("### 📊 Défauts actifs")
-    st.metric("⚠️ Total défauts", len(active_defects))
+    st.markdown(f"### 📊 Défauts - Zone {technician_zone}")
+    st.metric("⚠️ Défauts actifs", len(active_defects))
     
     if len(active_defects) > 0:
         st.markdown("---")

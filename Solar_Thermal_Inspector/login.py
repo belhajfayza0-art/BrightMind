@@ -310,8 +310,8 @@ with col_form:
             if email and password:
                 user = authenticate_user(email, password)
                 if user:
-                    login_user(user["email"], user["name"], user["role"])
-                    st.success(f"Bonjour {user['name']} ! Redirection...")
+                    login_user(user["email"], user["name"], user["role"], user.get("zone", "zone_d"))
+                    st.success(f"Bonjour {user['name']} ! (Zone: {user.get('zone', 'zone_d')})")
                     st.switch_page("pages/technician_dashboard.py")
                 else:
                     st.error("Email ou mot de passe incorrect")
@@ -335,6 +335,24 @@ with col_form:
         st.markdown('<label class="label">RÔLE</label>', unsafe_allow_html=True)
         role = st.selectbox("Rôle", ["technician", "manager"], key="signup_role", label_visibility="collapsed")
         
+        # AJOUT DU CHAMP ZONE
+        st.markdown('<label class="label">ZONE</label>', unsafe_allow_html=True)
+        zone = st.selectbox(
+            "Zone", 
+            ["Noor I", "Noor II", "Noor III", "Noor IV", "Midelt"], 
+            key="signup_zone", 
+            label_visibility="collapsed"
+        )
+
+        zone_info = {
+            "Noor I": "🔧 Centrale Noor I (CSP - Miroirs paraboliques) - 160 MW",
+            "Noor II": "🔧 Centrale Noor II (CSP - Miroirs paraboliques) - 200 MW",
+            "Noor III": "🔧 Centrale Noor III (CSP - Tour solaire) - 150 MW",
+            "Noor IV": "🔧 Centrale Noor IV (Photovoltaïque) - 72 MW",
+            "Midelt": "🔧 Centrale Midelt (CSP + PV) - 800 MW"
+        }
+        st.caption(zone_info.get(zone, ""))
+        
         if st.button("Créer mon compte", type="primary", use_container_width=True):
             if name and email_su and pwd:
                 if pwd != pwd2:
@@ -342,7 +360,7 @@ with col_form:
                 elif len(pwd) < 6:
                     st.warning("6 caractères minimum")
                 else:
-                    success, msg = save_user(email_su, name, pwd, role)
+                    success, msg = save_user(email_su, name, pwd, role, zone)
                     if success:
                         st.success(msg)
                         st.balloons()
@@ -356,7 +374,10 @@ with col_form:
     <div class="demo-box">
         <div class="demo-title">🔐 COMPTES DE DÉMONSTRATION</div>
         <div class="demo-text">👔 MANAGER : manager@solarthermal.com / manager123</div>
-        <div class="demo-text">🔧 TECHNICIEN : tech@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN A (Zone A) : tech_a@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN B (Zone B) : tech_b@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN C (Zone C) : tech_c@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN D (Zone D) : tech_d@solarthermal.com / tech123</div>
     </div>
     <div class="footer">© 2025 Solar Thermal Inspector</div>
     </div>

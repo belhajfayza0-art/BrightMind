@@ -162,11 +162,39 @@ if mission['status'] != 'completed':
 
 else:
     st.subheader("📝 Rapport d'intervention")
+    
+    # Afficher le rapport actuel
     if mission['notes'] and mission['notes'] != '':
         st.write(mission['notes'])
     else:
         st.write("Aucun rapport disponible")
     
+    # 🆕 AJOUTER LE BOUTON MODIFIER
+    if st.button("✏️ Modifier le rapport", type="secondary"):
+        st.session_state.edit_notes = mission['notes']
+        st.session_state.show_edit = True
+    
+    # 🆕 FORMULAIRE DE MODIFICATION
+    if st.session_state.get('show_edit', False):
+        st.markdown("---")
+        st.subheader("✏️ Modifier le rapport")
+        
+        new_notes = st.text_area("Nouvelles notes", value=st.session_state.edit_notes if st.session_state.edit_notes else "", height=150)
+        
+        col_edit1, col_edit2 = st.columns(2)
+        with col_edit1:
+            if st.button("💾 Sauvegarder", type="primary"):
+                from backend.technician_service import update_mission_notes
+                update_mission_notes(mission_id, new_notes)
+                st.success("✅ Rapport modifié avec succès !")
+                st.session_state.show_edit = False
+                st.rerun()
+        with col_edit2:
+            if st.button("❌ Annuler"):
+                st.session_state.show_edit = False
+                st.rerun()
+    
+    # Bouton retour
     if st.button("◀️ Retour au dashboard"):
         del st.session_state.selected_mission
         st.switch_page("pages/technician_dashboard.py")

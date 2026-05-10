@@ -8,7 +8,7 @@ import time
 import os
 import random
 from datetime import datetime
-from backend.alert_service import get_pending_alerts, take_alert, is_alert_taken
+from backend.alert_service import get_pending_alerts_by_zone, take_alert, is_alert_taken
 from backend.ai_monitor import simulate_ai_detection
 from components.sidebar import render_sidebar
 from components.style import apply_style
@@ -23,21 +23,21 @@ if 'user_role' not in st.session_state or st.session_state.user_role != 'technic
     st.stop()
 
 technician_name = st.session_state.user_name
+technician_zone = st.session_state.get('user_zone', 'Noor IV')
 
 # ============================================
 # IA AUTOMATIQUE - Détection sans intervention
 # ============================================
 
 # Simulation : 15% de chance qu'une alerte soit créée à chaque chargement
-if random.random() < 0.15:
+if random.random() < 0.5:
     result = simulate_ai_detection()
-    # Notification discrète
     st.toast(f"🤖 IA : {result['defect']['defect_type']} détecté à {result['defect']['location']}", icon="🔔")
 
 # Option : alerte périodique basée sur le temps
 current_minute = datetime.now().minute
 last_alert = st.session_state.get('last_alert_minute', -1)
-if current_minute % 7 == 0 and last_alert != current_minute:  # Toutes les 7 minutes
+if current_minute % 5 == 0 and last_alert != current_minute:
     st.session_state.last_alert_minute = current_minute
     result = simulate_ai_detection()
     st.toast(f"🤖 IA : Nouveau défaut détecté - {result['defect']['defect_type']}", icon="⚠️")
@@ -52,7 +52,7 @@ render_sidebar(technician_name)
 # TITRE
 # ============================================
 st.title("🔔 Alertes IA - Défauts détectés")
-st.markdown("L'intelligence artificielle surveille en permanence les panneaux solaires")
+st.markdown(f"L'intelligence artificielle surveille la zone **{technician_zone}**")
 
 # Auto-refresh optionnel
 auto_refresh = st.checkbox("🔄 Auto-actualisation (10s)", value=False)
@@ -63,16 +63,16 @@ if auto_refresh:
 st.markdown("---")
 
 # ============================================
-# AFFICHAGE DES ALERTES
+# AFFICHAGE DES ALERTES (FILTRÉES PAR ZONE)
 # ============================================
 st.subheader("📢 Alertes en cours")
 
-alerts = get_pending_alerts()
+alerts = get_pending_alerts_by_zone(technician_zone)
 
 if len(alerts) == 0:
-    st.info("✅ Aucune alerte en cours. Tous les panneaux sont en bon état.")
+    st.info(f"✅ Aucune alerte en cours dans votre zone {technician_zone}.")
 else:
-    st.warning(f"⚠️ {len(alerts)} alerte(s) en attente !")
+    st.warning(f"⚠️ {len(alerts)} alerte(s) en attente dans votre zone {technician_zone} !")
     
     for _, alert in alerts.iterrows():
         severity_color = "🔴" if alert['severity'] == 'critical' else "🟠" if alert['severity'] == 'high' else "🟡"
@@ -111,21 +111,21 @@ else:
         st.markdown("---")
         
         if not is_alert_taken(alert['id']):
+            # Afficher le bouton "PRENDRE CETTE MISSION"
             col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
             with col_btn2:
-                if st.button(f"📋 PRENDRE CETTE MISSION", key=f"take_{alert['id']}", type="primary", use_container_width=True):
+                if st.button(f"📋 PRENDRE CETTE MISSION", key=f"take_{alert['id']}", type="primary"):
                     mission_id = take_alert(alert['id'], technician_name)
-                    st.success(f"✅ Mission #{mission_id} prise en charge ! L'alerte est maintenant désactivée.")
+                    st.success(f"✅ Mission #{mission_id} prise en charge !")
                     st.balloons()
                     st.rerun()
         else:
+            # Alerte déjà prise - afficher un message
             st.markdown(f"""
             <div style="background: #fefce8; border-radius: 16px; padding: 0.8rem; text-align: center; margin-top: 0.5rem;">
                 ⚠️ Cette mission a déjà été prise par un autre technicien
             </div>
             """, unsafe_allow_html=True)
-        
-        st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================
 # RAPPEL
