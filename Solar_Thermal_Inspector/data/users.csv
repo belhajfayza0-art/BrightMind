@@ -1,3 +1,14 @@
-email,name,password_hash,role,date_inscription
-admin@solar.com,Administrateur,$2b$12$c9vCwKDUdkFl4VvL7GSoUevQyn30fX0xMIlpEgujo7/pCvzlWa7pi,manager,2026-05-05 20:23:07
-chaimaealla2005@gmail.com,Chaimae,$2b$12$SjMW3qMXYbJ0UMAxFoGm4O/TsMmuoM7xwDP98fARXUpyfFJfAfa5K,technician,2026-05-05 20:23:40
+name,email,password,role,zone,phone,created_at
+Ali Manager,ali@noor1.com,manager123,manager,Noor I,612345679.0,2026-05-10
+Sara Manager,sara@noor2.com,manager123,manager,Noor II,612345680.0,2026-05-10
+Karim Manager,karim@noor3.com,manager123,manager,Noor III,612345681.0,2026-05-10
+Leila Manager,leila@noor4.com,manager123,manager,Noor IV,612345682.0,2026-05-10
+Ahmed Tech,ahmed@noor1.com,tech123,technician,Noor I,612345684.0,2026-05-10
+Fatima Tech,fatima@noor2.com,tech123,technician,Noor II,612345685.0,2026-05-10
+Hassan Tech,hassan@noor3.com,tech123,technician,Noor III,612345686.0,2026-05-10
+Nadia Tech,nadia@noor4.com,tech123,technician,Noor IV,612345687.0,2026-05-10
+fayza,belhajfayza0@gmail.com,fayza123,manager,Noor I,,2026-05-10
+fayza belhaj,fayza.com,fayza1234,technician,Noor I,,2026-05-10
+kaoutar,kaoutar.com,kaoutar123,manager,Noor III,,2026-05-10
+chaimae,chaimae.com,chaimae123,manager,Noor IV,,2026-05-11
+fayza belhaj,fayzabelhaj.com,fayza2005,manager,Noor II,,2026-05-11

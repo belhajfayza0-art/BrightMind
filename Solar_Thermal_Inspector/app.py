@@ -1,94 +1,103 @@
-"""
-Application principale - Après connexion
-Redirige vers le dashboard approprié selon le rôle
-"""
-
+# app.py
 import streamlit as st
-from utils.session_manager import init_session_state, require_auth, get_current_user, logout_user
+from utils.session_manager import init_session_state, require_auth, get_current_user, get_current_role, get_current_zone
+from utils.styles import apply_global_style
+from utils.sidebar import show_sidebar
 
-# Configuration de la page
+# Configuration
 st.set_page_config(
-    page_title="Solar Thermal Inspector - Dashboard",
+    page_title="Solar Thermal Inspector",
     page_icon="☀️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Initialiser la session
-init_session_state()
+# Appliquer le CSS global
+apply_global_style()
 
-# Vérifier si l'utilisateur est connecté
+# Initialisation
+init_session_state()
 require_auth()
 
-# Récupérer les infos de l'utilisateur
 user = get_current_user()
+user_role = get_current_role()
+user_zone = get_current_zone()
 
-# ============================================
-# BARRE LATÉRALE
-# ============================================
-with st.sidebar:
-    st.image("https://img.icons8.com/color/96/solar-panel.png", width=80)
-    st.title("SOLAR THERMAL")
-    st.markdown(f"### 👋 {user['name']}")
-    st.markdown(f"📧 {user['email']}")
-    
-    if user['role'] == 'manager':
-        st.markdown("🔑 **Rôle:** 📊 Manager")
-    else:
-        st.markdown("🔑 **Rôle:** 🔧 Technicien")
-    
-    st.markdown("---")
-    
-    if st.button("🚪 Déconnexion", use_container_width=True):
-        logout_user()
-        st.rerun()
+# Définir l'ID de la page pour la clé unique
+st.session_state['current_page'] = 'home'
 
-# ============================================
-# CONTENU PRINCIPAL
-# ============================================
-st.title("☀️ Solar Thermal Inspector")
-st.markdown(f"### Bienvenue {user['name']} !")
+# Afficher la sidebar
+show_sidebar()
 
-if user['role'] == 'manager':
-    st.info("📊 **Vue Manager** - Dashboard des statistiques et gestion des techniciens")
-    
+# Contenu principal
+st.markdown(f"""
+<div class="main-header">
+    <div class="main-header-title">Solar Thermal Inspector</div>
+    <div class="main-header-subtitle">Bienvenue {user.get('name', '')}</div>
+</div>
+""", unsafe_allow_html=True)
+
+if user_role == 'manager':
     col1, col2, col3, col4 = st.columns(4)
+    
     with col1:
-        st.metric("📊 Panneaux", "156")
+        st.markdown("""
+        <div class="stat-card">
+            <div class="stat-value">1.4M</div>
+            <div class="stat-label">Panneaux inspectés</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     with col2:
-        st.metric("⚠️ Défauts", "12")
+        st.markdown("""
+        <div class="stat-card">
+            <div class="stat-value">42</div>
+            <div class="stat-label">Défauts actifs</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     with col3:
-        st.metric("🔧 Techniciens", "4")
+        st.markdown("""
+        <div class="stat-card">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Techniciens</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     with col4:
-        st.metric("⚡ Efficacité", "89%")
+        st.markdown("""
+        <div class="stat-card">
+            <div class="stat-value">97%</div>
+            <div class="stat-label">Précision IA</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    st.markdown("---")
-    st.markdown("### 🎯 Actions disponibles")
-    st.markdown("""
-    - 📈 Consulter les statistiques de la station
-    - 👥 Gérer les techniciens
-    - 📋 Assigner des missions
-    - 📊 Générer des rapports
-    """)
+    st.markdown('<div class="section-title">Actions rapides</div>', unsafe_allow_html=True)
     
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("Tableau de bord détaillé", use_container_width=True):
+            st.switch_page("pages/manager_dashboard.py")
+    
+    with col2:
+        if st.button("Assigner une mission", use_container_width=True):
+            st.switch_page("pages/manager_assign.py")
+    
+    with col3:
+        if st.button("Générer un rapport", use_container_width=True):
+            st.switch_page("pages/manager_reports.py")
+    
+    st.info("Utilisez le menu latéral pour accéder à toutes les fonctionnalités.")
+
 else:
-    st.info("🔧 **Vue Technicien** - Gestion de vos missions")
+    st.markdown(f"Zone d'affectation : **{user_zone}**")
+    st.markdown("---")
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("📋 Missions en cours", "3")
+        st.metric("Missions en cours", "3")
     with col2:
-        st.metric("✅ Missions terminées", "24")
+        st.metric("Missions terminées", "24")
     with col3:
-        st.metric("⭐ Note moyenne", "4.8/5")
-    
-    st.markdown("---")
-    st.markdown("### 🎯 Actions disponibles")
-    st.markdown("""
-    - 📋 Voir mes missions assignées
-    - 🗺️ Localiser les défauts sur la carte
-    - ✅ Confirmer la fin des interventions
-    - 📊 Consulter mes statistiques
-    """)
-
-st.markdown("---")
-st.success(f"✅ Connecté en tant que {user['role']} - {user['name']}")
+        st.metric("Efficacité", "96%")

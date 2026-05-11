@@ -1,5 +1,6 @@
 """
 Page de connexion - Design 50/50 - Tout en haut
+Avec sélection de zone pour inscription
 """
 
 import streamlit as st
@@ -111,7 +112,6 @@ with col_image:
                 height: 100%;
                 object-fit: cover;
             }}
-                
         </style>
         <div class="image-container">
             <img src="data:image/jpeg;base64,{image_base64}">
@@ -159,7 +159,7 @@ with col_form:
             margin: 0 0 1.5rem 0 !important;
             padding: 0 !important;
             letter-spacing: 2px;
-            text-align: center;  /* ← Centré horizontalement */
+            text-align: center;
         }
         
         .subtitle {
@@ -310,8 +310,6 @@ with col_form:
         .right-content {
             min-height: 100vh !important;
         }
-        
-                
     </style>
     
     <div class="form-container">
@@ -321,6 +319,9 @@ with col_form:
     # Onglets
     tab1, tab2 = st.tabs(["Connexion", "Inscription"])
     
+    # Liste des zones disponibles
+    ZONES = ["Noor I", "Noor II", "Noor III", "Noor IV", "Midelt"]
+    
     # ========== CONNEXION ==========
     with tab1:
         st.markdown('<label class="label">EMAIL</label>', unsafe_allow_html=True)
@@ -329,11 +330,11 @@ with col_form:
         st.markdown('<label class="label">MOT DE PASSE</label>', unsafe_allow_html=True)
         password = st.text_input("login_password", type="password", placeholder="••••••••", key="login_password", label_visibility="collapsed")
         
-        if st.button("Se connecter", type="primary", use_container_width=True):
+        if st.button("Se connecter", type="primary", use_container_width=True, key="login_btn"):
             if email and password:
                 user = authenticate_user(email, password)
                 if user:
-                    login_user(user["email"], user["name"], user["role"])
+                    login_user(user["email"], user["name"], user["role"], user.get("zone", "toutes"))
                     st.success(f"Bonjour {user['name']} !")
                     st.switch_page("app.py")
                 else:
@@ -341,7 +342,7 @@ with col_form:
             else:
                 st.warning("Veuillez remplir tous les champs")
     
-    # ========== INSCRIPTION ==========
+    # ========== INSCRIPTION AVEC ZONE ==========
     with tab2:
         st.markdown('<label class="label">NOM COMPLET</label>', unsafe_allow_html=True)
         name = st.text_input("signup_name", placeholder="Votre nom", key="signup_name", label_visibility="collapsed")
@@ -358,14 +359,19 @@ with col_form:
         st.markdown('<label class="label">RÔLE</label>', unsafe_allow_html=True)
         role = st.selectbox("Rôle", ["technician", "manager"], key="signup_role", label_visibility="collapsed")
         
-        if st.button("Créer mon compte", type="primary", use_container_width=True):
+        # ===== NOUVEAU : Sélection de la ZONE =====
+        st.markdown('<label class="label">ZONE D’AFFECTATION</label>', unsafe_allow_html=True)
+        zone = st.selectbox("Zone", ZONES, key="signup_zone", label_visibility="collapsed")
+        st.caption("📍 La zone définit sur quel périmètre vous travaillerez")
+        
+        if st.button("Créer mon compte", type="primary", use_container_width=True, key="signup_btn"):
             if name and email_su and pwd:
                 if pwd != pwd2:
                     st.error("Les mots de passe ne correspondent pas")
                 elif len(pwd) < 6:
                     st.warning("6 caractères minimum")
                 else:
-                    success, msg = save_user(email_su, name, pwd, role)
+                    success, msg = save_user(email_su, name, pwd, role, zone)
                     if success:
                         st.success(msg)
                         st.balloons()
@@ -374,12 +380,14 @@ with col_form:
             else:
                 st.warning("Veuillez remplir tous les champs")
     
-    # Comptes démo
+    # Comptes démo (mis à jour avec les zones)
     st.markdown("""
     <div class="demo-box">
         <div class="demo-title">🔐 COMPTES DE DÉMONSTRATION</div>
-        <div class="demo-text">👔 MANAGER : manager@solarthermal.com / manager123</div>
-        <div class="demo-text">🔧 TECHNICIEN : tech@solarthermal.com / tech123</div>
+        <div class="demo-text">👔 SUPER MANAGER : admin@solarthermal.com / admin123 (Toutes zones)</div>
+        <div class="demo-text">📊 MANAGER Noor III : karim@noor3.com / manager123</div>
+        <div class="demo-text">🔧 TECHNICIEN Noor III : hassan@noor3.com / tech123</div>
+        <div class="demo-text" style="margin-top:8px;">📍 Zones disponibles : Noor I, Noor II, Noor III, Noor IV, Midelt</div>
     </div>
     <div class="footer">© 2025 Solar Thermal Inspector</div>
     """, unsafe_allow_html=True)
