@@ -1,0 +1,15 @@
+id,defect_id,technician_id,technician_name,defect_type,severity,location,temperature,status,created_at,completed_at,notes,zone
+1,1,1,Mohammed Alla ,Shading,medium,"Ligne 8, Colonne 2",49.5,completed,2026-05-10 03:20:45,2026-05-10 03:21:11,Intervention terminée,Noor IV
+2,2,1,Mohammed Alla ,Hotspot,critical,"Ligne 4, Colonne 3",78.3,completed,2026-05-10 03:20:50,2026-05-10 12:46:46,Intervention terminée,Noor IV
+3,3,1,Mohammed Alla ,Dust,low,"Ligne 3, Colonne 7",38.2,pending,2026-05-10 12:45:43,,,Noor IV
+4,4,1,Mohammed Alla ,Crack,high,"Ligne 3, Colonne 7",61.2,pending,2026-05-10 12:45:47,,,Noor IV
+5,5,1,Assia,HTFLeak,critical,"Noor II, Ligne 8, Colonne 12",91.3,completed,2026-05-10 13:01:15,2026-05-10 15:06:23,Intervention terminée,Noor II
+6,6,1,Alla Chaimae,MirrorMisalignment,high,"Noor II, Ligne 2, Colonne 13",66.1,completed,2026-05-10 13:01:46,2026-05-10 14:54:57,Intervention terminée,Noor I
+7,7,1,tech,ReceiverTubeLeak,critical,"Noor III, Ligne 9, Colonne 10",90.1,in_progress,2026-05-10 13:02:17,,,Noor III
+8,8,1,tech2,StringOpenCircuit,critical,"Midelt, Ligne 11, Colonne 10",78.6,in_progress,2026-05-10 13:04:20,,,Midelt
+9,9,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor II, Ligne 7, Colonne 8",90.7,completed,2026-05-10 14:55:27,2026-05-10 14:55:37,Intervention terminée,Noor I
+10,10,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor II, Ligne 5, Colonne 3",96.5,completed,2026-05-10 15:02:36,2026-05-10 15:17:25,C'EST BON ,Noor I
+11,11,1,Assia,HTFLeak,critical,"Noor II, Ligne 10, Colonne 12",104.8,completed,2026-05-10 15:06:40,2026-05-10 15:07:03,Intervention terminée,Noor II
+12,12,1,Alla Chaimae,MirrorMisalignment,high,"Noor II, Ligne 7, Colonne 6",64.0,pending,2026-05-10 15:19:08,,,Noor I
+13,13,1,tech3,AbsorberTubeDegradation,critical,"Noor II, Ligne 11, Colonne 7",82.1,completed,2026-05-10 15:47:22,2026-05-10 15:48:45,Intervention terminée,Noor I
+14,14,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor II, Ligne 2, Colonne 10",84.8,pending,2026-05-10 15:48:00,,,Noor I

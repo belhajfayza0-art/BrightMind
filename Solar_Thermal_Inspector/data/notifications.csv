@@ -1,0 +1,19 @@
+id,technician_id,technician_name,message,defect_type,created_at,read,mission_id
+1,1,tech,"🟡 Nouvelle mission : Shading détecté à Ligne 10, Colonne 8 (47.7°C)",Shading,2026-05-07 14:10:07,False,1
+2,1,Chaimae,"🟡 Nouvelle mission : Dust détecté à Ligne 3, Colonne 7 (37.3°C)",Dust,2026-05-07 15:36:36,False,2
+3,1,Chaimae,"🔴 Nouvelle mission : Broken Cell détecté à Ligne 5, Colonne 12 (81.2°C)",Broken Cell,2026-05-07 16:19:11,False,1
+4,1,Chaimae,"🔴 Nouvelle mission : Broken Cell détecté à Ligne 7, Colonne 11 (86.0°C)",Broken Cell,2026-05-07 16:33:51,False,1
+5,1,Chaimae,"🔴 Nouvelle mission : Hotspot détecté à Ligne 2, Colonne 15 (95.0°C)",Hotspot,2026-05-07 18:53:02,False,2
+6,1,Chaimae,"🟡 Nouvelle mission : Shading détecté à Ligne 3, Colonne 7 (49.1°C)",Shading,2026-05-07 20:56:49,False,3
+7,1,Chaimae,"🟠 Nouvelle mission : Crack détecté à Ligne 3, Colonne 7 (62.6°C)",Crack,2026-05-07 20:57:06,False,4
+8,1,Chaimae,"🟡 Nouvelle mission : Shading détecté à Ligne 8, Colonne 2 (47.2°C)",Shading,2026-05-07 23:56:37,False,5
+9,1,Chaimae,"🔴 Nouvelle mission : Broken Cell détecté à Ligne 10, Colonne 8 (81.9°C)",Broken Cell,2026-05-08 00:00:37,False,6
+10,1,Chaimae,"🟡 Nouvelle mission : Dust détecté à Ligne 5, Colonne 12 (41.8°C)",Dust,2026-05-08 00:01:47,False,7
+11,1,Chaimae,"🔴 Nouvelle mission : Broken Cell détecté à Ligne 4, Colonne 3 (97.1°C)",Broken Cell,2026-05-08 00:02:35,False,8
+12,1,Chaimae,"🔴 Nouvelle mission : Hotspot détecté à Ligne 3, Colonne 7 (93.7°C)",Hotspot,2026-05-08 00:07:22,False,9
+13,1,Chaimae,"🟡 Nouvelle mission : Dust détecté à Ligne 4, Colonne 3 (37.9°C)",Dust,2026-05-08 01:32:47,False,10
+14,1,Chaimae,"🔴 Nouvelle mission : Broken Cell détecté à Ligne 8, Colonne 2 (86.8°C)",Broken Cell,2026-05-08 23:31:23,False,11
+15,1,Alla Chaimae,"🟡 Nouvelle mission : Dust détecté à Ligne 7, Colonne 11 (38.4°C)",Dust,2026-05-10 02:24:05,False,12
+16,1,Alla Chaimae,"🟡 Nouvelle mission : Shading détecté à Ligne 4, Colonne 3 (54.2°C)",Shading,2026-05-10 02:54:21,False,13
+17,1,Alla Chaimae,"🟠 Nouvelle mission : Crack détecté à Ligne 3, Colonne 7 (74.3°C)",Crack,2026-05-10 02:54:28,False,14
+18,1,Alla Chaimae,"🟡 Nouvelle mission : Dust détecté à Ligne 2, Colonne 15 (41.2°C)",Dust,2026-05-10 02:54:40,False,15

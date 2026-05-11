@@ -6,7 +6,7 @@ import streamlit as st
 import base64
 from utils.session_manager import (
     init_session_state, init_users_db, authenticate_user, 
-    login_user, save_user, is_logged_in
+    login_user, logout_user, save_user, is_logged_in
 )
 
 # ============================================
@@ -37,7 +37,7 @@ init_users_db()
 init_session_state()
 
 if is_logged_in():
-    st.switch_page("app.py")
+    st.switch_page("pages/technician_dashboard.py")
 
 # ============================================
 # CSS - SUPPRESSION TOTALE DES ESPACES
@@ -111,7 +111,6 @@ with col_image:
                 height: 100%;
                 object-fit: cover;
             }}
-                
         </style>
         <div class="image-container">
             <img src="data:image/jpeg;base64,{image_base64}">
@@ -138,7 +137,7 @@ with col_image:
         """, unsafe_allow_html=True)
 
 # ============================================
-# COLONNE DROITE : FORMULAIRE (TOUT EN HAUT)
+# COLONNE DROITE : FORMULAIRE
 # ============================================
 with col_form:
     st.markdown("""
@@ -159,16 +158,7 @@ with col_form:
             margin: 0 0 1.5rem 0 !important;
             padding: 0 !important;
             letter-spacing: 2px;
-            text-align: center;  /* ← Centré horizontalement */
-        }
-        
-        .subtitle {
-            font-size: 0.8rem;
-            color: #6b8a7a;
-            margin: 0 0 1.5rem 0 !important;
-            padding: 0 0 0.3rem 0 !important;
-            border-bottom: 2px solid #dcda2c;
-            display: inline-block;
+            text-align: center;
         }
         
         .label {
@@ -179,11 +169,6 @@ with col_form:
             letter-spacing: 1.5px;
             margin: 0 0 0.5rem 0 !important;
             display: block;
-        }
-        
-        .stTextInput > div {
-            margin: 0 !important;
-            padding: 0 !important;
         }
         
         .stTextInput > div > div > input {
@@ -200,11 +185,6 @@ with col_form:
             border-color: #dcda2c;
             box-shadow: 0 0 0 2px rgba(220,218,44,0.2);
             outline: none;
-        }
-        
-        .stSelectbox > div {
-            margin: 0 !important;
-            padding: 0 !important;
         }
         
         .stSelectbox > div > div {
@@ -243,6 +223,7 @@ with col_form:
         .stTabs [data-baseweb="tab"]:hover {
             background: #7a9a7a !important;
         }
+        
         .stTabs [aria-selected="true"] {
             background: #1a5c3a !important;
             color: white !important;
@@ -299,6 +280,7 @@ with col_form:
             font-size: 0.55rem;
             color: #b0c0b0;
         }
+        
         .image-container {
             position: fixed !important;
             top: 0 !important;
@@ -307,11 +289,6 @@ with col_form:
             height: 100vh !important;
             overflow: hidden !important;
         }
-        .right-content {
-            min-height: 100vh !important;
-        }
-        
-                
     </style>
     
     <div class="form-container">
@@ -333,9 +310,9 @@ with col_form:
             if email and password:
                 user = authenticate_user(email, password)
                 if user:
-                    login_user(user["email"], user["name"], user["role"])
-                    st.success(f"Bonjour {user['name']} !")
-                    st.switch_page("app.py")
+                    login_user(user["email"], user["name"], user["role"], user.get("zone", "zone_d"))
+                    st.success(f"Bonjour {user['name']} ! (Zone: {user.get('zone', 'zone_d')})")
+                    st.switch_page("pages/technician_dashboard.py")
                 else:
                     st.error("Email ou mot de passe incorrect")
             else:
@@ -358,6 +335,24 @@ with col_form:
         st.markdown('<label class="label">RÔLE</label>', unsafe_allow_html=True)
         role = st.selectbox("Rôle", ["technician", "manager"], key="signup_role", label_visibility="collapsed")
         
+        # AJOUT DU CHAMP ZONE
+        st.markdown('<label class="label">ZONE</label>', unsafe_allow_html=True)
+        zone = st.selectbox(
+            "Zone", 
+            ["Noor I", "Noor II", "Noor III", "Noor IV", "Midelt"], 
+            key="signup_zone", 
+            label_visibility="collapsed"
+        )
+
+        zone_info = {
+            "Noor I": "🔧 Centrale Noor I (CSP - Miroirs paraboliques) - 160 MW",
+            "Noor II": "🔧 Centrale Noor II (CSP - Miroirs paraboliques) - 200 MW",
+            "Noor III": "🔧 Centrale Noor III (CSP - Tour solaire) - 150 MW",
+            "Noor IV": "🔧 Centrale Noor IV (Photovoltaïque) - 72 MW",
+            "Midelt": "🔧 Centrale Midelt (CSP + PV) - 800 MW"
+        }
+        st.caption(zone_info.get(zone, ""))
+        
         if st.button("Créer mon compte", type="primary", use_container_width=True):
             if name and email_su and pwd:
                 if pwd != pwd2:
@@ -365,7 +360,7 @@ with col_form:
                 elif len(pwd) < 6:
                     st.warning("6 caractères minimum")
                 else:
-                    success, msg = save_user(email_su, name, pwd, role)
+                    success, msg = save_user(email_su, name, pwd, role, zone)
                     if success:
                         st.success(msg)
                         st.balloons()
@@ -379,9 +374,11 @@ with col_form:
     <div class="demo-box">
         <div class="demo-title">🔐 COMPTES DE DÉMONSTRATION</div>
         <div class="demo-text">👔 MANAGER : manager@solarthermal.com / manager123</div>
-        <div class="demo-text">🔧 TECHNICIEN : tech@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN A (Zone A) : tech_a@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN B (Zone B) : tech_b@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN C (Zone C) : tech_c@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN D (Zone D) : tech_d@solarthermal.com / tech123</div>
     </div>
     <div class="footer">© 2025 Solar Thermal Inspector</div>
+    </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)

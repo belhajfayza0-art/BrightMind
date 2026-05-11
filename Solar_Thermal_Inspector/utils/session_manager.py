@@ -14,7 +14,8 @@ SESSION_KEYS = {
     "logged_in": False,
     "user_role": None,
     "user_name": None,
-    "user_email": None
+    "user_email": None,
+    "user_zone": None  # ← AJOUTÉ
 }
 
 def init_session_state():
@@ -22,29 +23,6 @@ def init_session_state():
     for key, default_value in SESSION_KEYS.items():
         if key not in st.session_state:
             st.session_state[key] = default_value
-
-def init_users_db():
-    """
-    Crée le fichier users.csv s'il n'existe pas
-    """
-    os.makedirs("data", exist_ok=True)
-    
-    if not os.path.exists("data/users.csv"):
-        df = pd.DataFrame(columns=["email", "name", "password_hash", "role", "date_inscription"])
-        df.to_csv("data/users.csv", index=False)
-        
-        # Ajouter un utilisateur admin par défaut (optionnel)
-        default_password = "admin123"
-        hashed = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt())
-        
-        admin_row = pd.DataFrame([{
-            "email": "admin@solar.com",
-            "name": "Administrateur",
-            "password_hash": hashed.decode('utf-8'),
-            "role": "manager",
-            "date_inscription": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }])
-        admin_row.to_csv("data/users.csv", mode='a', header=False, index=False)
 
 def get_users_df():
     """
@@ -57,7 +35,29 @@ def get_users_df():
         init_users_db()
         return pd.read_csv("data/users.csv")
 
-def save_user(email, name, password, role="technician"):
+def init_users_db():
+    """Crée le fichier users.csv s'il n'existe pas"""
+    os.makedirs("data", exist_ok=True)
+    
+    if not os.path.exists("data/users.csv"):
+        df = pd.DataFrame(columns=["email", "name", "password_hash", "role", "zone", "date_inscription"])
+        df.to_csv("data/users.csv", index=False)
+        
+        # Ajouter un utilisateur admin par défaut
+        default_password = "admin123"
+        hashed = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt())
+        
+        admin_row = pd.DataFrame([{
+            "email": "admin@solar.com",
+            "name": "Administrateur",
+            "password_hash": hashed.decode('utf-8'),
+            "role": "manager",
+            "zone": "Noor IV",
+            "date_inscription": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }])
+        admin_row.to_csv("data/users.csv", mode='a', header=False, index=False)
+
+def save_user(email, name, password, role, zone="Noor IV"):
     """
     Enregistre un nouvel utilisateur dans la base de données
     """
@@ -70,12 +70,13 @@ def save_user(email, name, password, role="technician"):
     # Hacher le mot de passe
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
-    # Créer le nouvel utilisateur
+    # Créer le nouvel utilisateur AVEC ZONE
     new_user = pd.DataFrame([{
         "email": email,
         "name": name,
         "password_hash": hashed.decode('utf-8'),
         "role": role,
+        "zone": zone,
         "date_inscription": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }])
     
@@ -115,12 +116,13 @@ def authenticate_user(email, password):
         return {
             "email": user['email'],
             "name": user['name'],
-            "role": user['role']
+            "role": user['role'],
+            "zone": user.get('zone', 'Noor IV')
         }
     
     return None
 
-def login_user(email, name, role):
+def login_user(email, name, role, zone):
     """
     Connecte l'utilisateur en stockant ses informations
     """
@@ -128,6 +130,7 @@ def login_user(email, name, role):
     st.session_state.user_email = email
     st.session_state.user_name = name
     st.session_state.user_role = role
+    st.session_state.user_zone = zone
 
 def logout_user():
     """
@@ -150,7 +153,8 @@ def get_current_user():
         return {
             "email": st.session_state.user_email,
             "name": st.session_state.user_name,
-            "role": st.session_state.user_role
+            "role": st.session_state.user_role,
+            "zone": st.session_state.get('user_zone', 'Noor IV')
         }
     return None
 
