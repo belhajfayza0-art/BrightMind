@@ -1,0 +1,37 @@
+[
+    {
+        "panel_id": "NOOR_ATLAS_SEC_A_ROW_04_PANEL_05",
+        "timestamp": "2026-05-10 12:49:39.759732",
+        "risk": {
+            "risk_level": "MEDIUM",
+            "risk_score": 6
+        },
+        "anomalies": [
+            {
+                "type": "MultiHotSpot",
+                "confidence": 0.79,
+                "bbox": [
+                    499.1903381347656,
+                    338.15228271484375,
+                    537.7364501953125,
+                    435.21722412109375
+                ]
+            },
+            {
+                "type": "SingleHotSpot",
+                "confidence": 0.53,
+                "bbox": [
+                    499.5211181640625,
+                    237.48385620117188,
+                    537.7950439453125,
+                    333.1756286621094
+                ]
+            }
+        ],
+        "count": 2,
+        "annotated_image": "output.jpg",
+        "status": "Fixed",
+        "technician": "Sara",
+        "fixed_at": "2026-05-10 12:50:50.894711"
+    }
+]
