@@ -1,5 +1,6 @@
 """
 Page de connexion - Design 50/50 - Tout en haut
+Avec sélection de zone pour inscription
 """
 
 import streamlit as st
@@ -159,6 +160,18 @@ with col_form:
             padding: 0 !important;
             letter-spacing: 2px;
             text-align: center;
+<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
+        }
+        
+        .subtitle {
+            font-size: 0.8rem;
+            color: #6b8a7a;
+            margin: 0 0 1.5rem 0 !important;
+            padding: 0 0 0.3rem 0 !important;
+            border-bottom: 2px solid #dcda2c;
+            display: inline-block;
+=======
+>>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
         }
         
         .label {
@@ -289,6 +302,12 @@ with col_form:
             height: 100vh !important;
             overflow: hidden !important;
         }
+<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
+        .right-content {
+            min-height: 100vh !important;
+        }
+=======
+>>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
     </style>
     
     <div class="form-container">
@@ -298,6 +317,9 @@ with col_form:
     # Onglets
     tab1, tab2 = st.tabs(["Connexion", "Inscription"])
     
+    # Liste des zones disponibles
+    ZONES = ["Noor I", "Noor II", "Noor III", "Noor IV", "Midelt"]
+    
     # ========== CONNEXION ==========
     with tab1:
         st.markdown('<label class="label">EMAIL</label>', unsafe_allow_html=True)
@@ -306,19 +328,25 @@ with col_form:
         st.markdown('<label class="label">MOT DE PASSE</label>', unsafe_allow_html=True)
         password = st.text_input("login_password", type="password", placeholder="••••••••", key="login_password", label_visibility="collapsed")
         
-        if st.button("Se connecter", type="primary", use_container_width=True):
+        if st.button("Se connecter", type="primary", use_container_width=True, key="login_btn"):
             if email and password:
                 user = authenticate_user(email, password)
                 if user:
+<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
+                    login_user(user["email"], user["name"], user["role"], user.get("zone", "toutes"))
+                    st.success(f"Bonjour {user['name']} !")
+                    st.switch_page("app.py")
+=======
                     login_user(user["email"], user["name"], user["role"], user.get("zone", "zone_d"))
                     st.success(f"Bonjour {user['name']} ! (Zone: {user.get('zone', 'zone_d')})")
                     st.switch_page("pages/technician_dashboard.py")
+>>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
                 else:
                     st.error("Email ou mot de passe incorrect")
             else:
                 st.warning("Veuillez remplir tous les champs")
     
-    # ========== INSCRIPTION ==========
+    # ========== INSCRIPTION AVEC ZONE ==========
     with tab2:
         st.markdown('<label class="label">NOM COMPLET</label>', unsafe_allow_html=True)
         name = st.text_input("signup_name", placeholder="Votre nom", key="signup_name", label_visibility="collapsed")
@@ -335,6 +363,14 @@ with col_form:
         st.markdown('<label class="label">RÔLE</label>', unsafe_allow_html=True)
         role = st.selectbox("Rôle", ["technician", "manager"], key="signup_role", label_visibility="collapsed")
         
+<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
+        # ===== NOUVEAU : Sélection de la ZONE =====
+        st.markdown('<label class="label">ZONE D’AFFECTATION</label>', unsafe_allow_html=True)
+        zone = st.selectbox("Zone", ZONES, key="signup_zone", label_visibility="collapsed")
+        st.caption("📍 La zone définit sur quel périmètre vous travaillerez")
+        
+        if st.button("Créer mon compte", type="primary", use_container_width=True, key="signup_btn"):
+=======
         # AJOUT DU CHAMP ZONE
         st.markdown('<label class="label">ZONE</label>', unsafe_allow_html=True)
         zone = st.selectbox(
@@ -354,6 +390,7 @@ with col_form:
         st.caption(zone_info.get(zone, ""))
         
         if st.button("Créer mon compte", type="primary", use_container_width=True):
+>>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
             if name and email_su and pwd:
                 if pwd != pwd2:
                     st.error("Les mots de passe ne correspondent pas")
@@ -369,15 +406,22 @@ with col_form:
             else:
                 st.warning("Veuillez remplir tous les champs")
     
-    # Comptes démo
+    # Comptes démo (mis à jour avec les zones)
     st.markdown("""
     <div class="demo-box">
         <div class="demo-title">🔐 COMPTES DE DÉMONSTRATION</div>
+<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
+        <div class="demo-text">👔 SUPER MANAGER : admin@solarthermal.com / admin123 (Toutes zones)</div>
+        <div class="demo-text">📊 MANAGER Noor III : karim@noor3.com / manager123</div>
+        <div class="demo-text">🔧 TECHNICIEN Noor III : hassan@noor3.com / tech123</div>
+        <div class="demo-text" style="margin-top:8px;">📍 Zones disponibles : Noor I, Noor II, Noor III, Noor IV, Midelt</div>
+=======
         <div class="demo-text">👔 MANAGER : manager@solarthermal.com / manager123</div>
         <div class="demo-text">🔧 TECHNICIEN A (Zone A) : tech_a@solarthermal.com / tech123</div>
         <div class="demo-text">🔧 TECHNICIEN B (Zone B) : tech_b@solarthermal.com / tech123</div>
         <div class="demo-text">🔧 TECHNICIEN C (Zone C) : tech_c@solarthermal.com / tech123</div>
         <div class="demo-text">🔧 TECHNICIEN D (Zone D) : tech_d@solarthermal.com / tech123</div>
+>>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
     </div>
     <div class="footer">© 2025 Solar Thermal Inspector</div>
     </div>

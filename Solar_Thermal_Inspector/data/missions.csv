@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+defect_id,technicien_nom,statut,priorite,date_assignation,notes,id,zone
+1,Chaimae,En cours,Normale,2026-05-07 13:44,,1,
+2,lina,En cours,Haute,2026-05-07 13:44,,2,
+2,Hassan Tech,En cours,Urgente,2026-05-11 22:00,,3,Noor III
+=======
 id,defect_id,technician_id,technician_name,defect_type,severity,location,temperature,status,created_at,completed_at,notes,zone
 1,1,1,Mohammed Alla ,Shading,medium,"Ligne 8, Colonne 2",49.5,completed,2026-05-10 03:20:45,2026-05-10 03:21:11,Intervention terminée,Noor IV
 2,2,1,Mohammed Alla ,Hotspot,critical,"Ligne 4, Colonne 3",78.3,completed,2026-05-10 03:20:50,2026-05-10 12:46:46,Intervention terminée,Noor IV
@@ -13,3 +19,4 @@ id,defect_id,technician_id,technician_name,defect_type,severity,location,tempera
 12,12,1,Alla Chaimae,MirrorMisalignment,high,"Noor II, Ligne 7, Colonne 6",64.0,pending,2026-05-10 15:19:08,,,Noor I
 13,13,1,tech3,AbsorberTubeDegradation,critical,"Noor II, Ligne 11, Colonne 7",82.1,completed,2026-05-10 15:47:22,2026-05-10 15:48:45,Intervention terminée,Noor I
 14,14,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor II, Ligne 2, Colonne 10",84.8,pending,2026-05-10 15:48:00,,,Noor I
+>>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403
