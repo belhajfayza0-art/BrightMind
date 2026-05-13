@@ -181,3 +181,8 @@ with col1:
 with col2:
     if st.button("Gérer les techniciens", use_container_width=True):
         st.switch_page("pages/manager_technicians.py")
+        # Après avoir sauvegardé la mission
+st.success(f" Mission assignée à {selected_tech_nom} dans la zone {user_zone}")
+
+# Optionnel: envoyer une notification (simulée)
+st.info(f" Notification envoyée au technicien {selected_tech_nom}")

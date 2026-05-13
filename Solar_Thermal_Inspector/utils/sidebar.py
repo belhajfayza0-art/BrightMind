@@ -51,14 +51,11 @@ def show_sidebar():
         
         st.markdown("---")
         
-        # Bouton DECONNEXION avec clé unique basée sur le nom de la page
-        # Utilisation de st.session_state pour avoir une clé différente par page
-        import hashlib
-        page_id = st.session_state.get('current_page', 'default')
-        logout_key = f"logout_{page_id}"
-        
-        if st.button("DECONNEXION", key=logout_key, use_container_width=True):
-            logout_user()
-            st.rerun()
+        # Bouton DECONNEXION - Version corrigée
+        if st.button("DÉCONNEXION", use_container_width=True):
+            # Nettoyer la session
+            st.session_state.clear()
+            # Rediriger vers la page de connexion (qui est à la racine)
+            st.switch_page("pages/login.py")
         
         st.markdown('<p style="font-size: 10px; text-align: center; opacity: 0.5; margin-top: 30px; color: #ffffff;">Solar Thermal Inspector v2.0</p>', unsafe_allow_html=True)

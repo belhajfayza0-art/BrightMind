@@ -2,3 +2,4 @@ id,defect_id,technician_id,technician_name,defect_type,severity,location,tempera
 1,1,1,Alla Chaimae,MirrorMisalignment,high,"Noor II, Ligne 7, Colonne 5",76.2,pending,Noor I,2026-05-13 02:12:30,,
 2,2,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor I, Ligne 4, Colonne 11",81.0,pending,Noor I,2026-05-13 02:12:35,,
 3,3,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor I, Ligne 12, Colonne 13",96.2,completed,Noor I,2026-05-13 02:12:41,2026-05-13 02:13:01,Intervention terminée
+4,4,1,chaimae,HTFLeak,critical,"Noor II, Ligne 9, Colonne 12",103.7,pending,Noor II,2026-05-13 15:31:34,,
