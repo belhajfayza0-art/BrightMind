@@ -1,8 +1,13 @@
-# utils/session_manager.py
+"""
+Gestionnaire de sessions utilisateur
+Gère la connexion, l'inscription et la persistence des données
+"""
+
 import streamlit as st
 import pandas as pd
-import os
+import bcrypt
 from datetime import datetime
+import os
 
 
 USERS_FILE = "data/users.csv"
@@ -84,9 +89,7 @@ def login_user(email, name, role, zone="toutes"):
     """Connecte l'utilisateur directement"""
 
 def get_users_df():
-    """
-    Charge la liste des utilisateurs depuis le fichier CSV
-    """
+    """Charge la liste des utilisateurs depuis le fichier CSV"""
     try:
         df = pd.read_csv("data/users.csv")
         return df
@@ -101,35 +104,16 @@ def init_users_db():
     if not os.path.exists("data/users.csv"):
         df = pd.DataFrame(columns=["email", "name", "password_hash", "role", "zone", "date_inscription"])
         df.to_csv("data/users.csv", index=False)
-        
-        # Ajouter un utilisateur admin par défaut
-        default_password = "admin123"
-        hashed = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt())
-        
-        admin_row = pd.DataFrame([{
-            "email": "admin@solar.com",
-            "name": "Administrateur",
-            "password_hash": hashed.decode('utf-8'),
-            "role": "manager",
-            "zone": "Noor IV",
-            "date_inscription": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }])
-        admin_row.to_csv("data/users.csv", mode='a', header=False, index=False)
 
 def save_user(email, name, password, role, zone="Noor IV"):
-    """
-    Enregistre un nouvel utilisateur dans la base de données
-    """
+    """Enregistre un nouvel utilisateur"""
     df = get_users_df()
     
-    # Vérifier si l'email existe déjà
     if email in df['email'].values:
-        return False, "Cet email est déjà utilisé. Veuillez vous connecter."
+        return False, "Cet email est déjà utilisé."
     
-    # Hacher le mot de passe
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
-    # Créer le nouvel utilisateur AVEC ZONE
     new_user = pd.DataFrame([{
         "email": email,
         "name": name,
@@ -139,38 +123,26 @@ def save_user(email, name, password, role, zone="Noor IV"):
         "date_inscription": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }])
     
-    # Ajouter au fichier CSV
     new_user.to_csv("data/users.csv", mode='a', header=False, index=False)
-    
-    return True, "Inscription réussie ! Vous pouvez maintenant vous connecter."
+    return True, "Inscription réussie !"
 
 def verify_password(plain_password, hashed_password):
-    """
-    Vérifie si le mot de passe correspond au hash stocké
-    """
     try:
         return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
     except:
         return False
 
 def authenticate_user(email, password):
-    """
-    Vérifie les identifiants et retourne les informations utilisateur
-    """
     df = get_users_df()
-    
     if df.empty:
         return None
     
-    # Chercher l'utilisateur par email
     user = df[df['email'] == email]
-    
     if user.empty:
         return None
     
     user = user.iloc[0]
     
-    # Vérifier le mot de passe
     if verify_password(password, user['password_hash']):
         return {
             "email": user['email'],
@@ -178,7 +150,6 @@ def authenticate_user(email, password):
             "role": user['role'],
             "zone": user.get('zone', 'Noor IV')
         }
-    
     return None
 
 def login_user(email, name, role, zone):
@@ -198,13 +169,8 @@ def login_user(email, name, role, zone):
     st.session_state.user_email = email
 
 def logout_user():
-    """Déconnecte l'utilisateur"""
-    st.session_state.logged_in = False
-    st.session_state.user = None
-    st.session_state.user_role = None
-    st.session_state.user_zone = None
-    st.session_state.user_name = None
-    st.session_state.user_email = None
+    for key in SESSION_KEYS.keys():
+        st.session_state[key] = SESSION_KEYS[key]
 
 def is_logged_in():
 
@@ -213,52 +179,10 @@ def is_logged_in():
 
 
 def require_auth():
-    """Vérifie que l'utilisateur est connecté"""
     if not is_logged_in():
-        st.switch_page("pages/login.py")
-        st.stop()
+        st.switch_page("login.py")
 
 def require_manager():
-    """Vérifie que l'utilisateur est manager"""
-    role = st.session_state.get('user_role', '')
-    if role != 'manager':
+    if not is_logged_in() or get_current_role() != 'manager':
         st.error("⛔ Accès réservé aux managers")
         st.stop()
-
-def get_current_user():
-    """Retourne l'utilisateur courant"""
-    return st.session_state.get('user', {})
-
-def get_current_zone():
-    """Retourne la zone de l'utilisateur courant"""
-    return st.session_state.get('user_zone', 'toutes')
-
-def get_current_role():
-    """Retourne le rôle de l'utilisateur courant"""
-    return st.session_state.get('user_role', '')
-
-def save_user(email, name, password, role, zone="toutes"):
-    """Enregistre un nouvel utilisateur"""
-    os.makedirs("data", exist_ok=True)
-    
-    if os.path.exists(USERS_FILE):
-        df = pd.read_csv(USERS_FILE)
-        if email in df['email'].values:
-            return False, "Cet email est déjà utilisé"
-    else:
-        df = pd.DataFrame(columns=['name', 'email', 'password', 'role', 'zone', 'phone', 'created_at'])
-    
-    new_user = pd.DataFrame([{
-        "name": name,
-        "email": email,
-        "password": password,
-        "role": role,
-        "zone": zone,
-        "phone": "",
-        "created_at": datetime.now().strftime("%Y-%m-%d")
-    }])
-    
-    df = pd.concat([df, new_user], ignore_index=True)
-    df.to_csv(USERS_FILE, index=False)
-    
-    return True, "Compte créé avec succès !"
