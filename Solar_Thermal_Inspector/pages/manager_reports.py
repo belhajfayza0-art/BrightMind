@@ -162,3 +162,32 @@ with col1:
 with col2:
     if st.button("Assigner une mission", use_container_width=True):
         st.switch_page("pages/manager_assign.py")
+        # Ajouter cette section dans manager_reports.py
+
+st.markdown('<div class="section-title">Rapports des techniciens</div>', unsafe_allow_html=True)
+
+def load_technician_reports():
+    try:
+        df = pd.read_csv("data/rapports_techniciens.csv")
+        # Filtrer par zone du manager
+        df = df[df['technicien_zone'] == user_zone]
+        return df
+    except FileNotFoundError:
+        return pd.DataFrame()
+
+tech_reports = load_technician_reports()
+
+if len(tech_reports) > 0:
+    for idx, row in tech_reports.iterrows():
+        with st.expander(f"📄 Rapport - {row['technicien_nom']} - {row['date_rapport']}"):
+            st.markdown(f"**Mission ID:** {row['mission_id']}")
+            st.markdown(f"**Technicien:** {row['technicien_nom']}")
+            st.markdown(f"**Date:** {row['date_rapport']}")
+            st.markdown(f"**Contenu:**")
+            st.info(row['contenu'])
+            
+            # Bouton pour marquer comme lu
+            if st.button(f"Marquer comme lu", key=f"mark_read_{row['id']}"):
+                st.success("Rapport marqué comme consulté")
+else:
+    st.info("Aucun rapport reçu des techniciens")

@@ -1,8 +1,10 @@
-email,name,password_hash,role,zone,date_inscription
-manager@solarthermal.com,Admin,$2b$12$...,manager,Noor IV,2026-05-10
-tech_a@solarthermal.com,Technicien A,$2b$12$...,technician,Noor I,2026-05-10
-tech_b@solarthermal.com,Technicien B,$2b$12$...,technician,Noor II,2026-05-10
-tech_c@solarthermal.com,Technicien C,$2b$12$...,technician,Noor III,2026-05-10
-tech_d@solarthermal.com,Technicien D,$2b$12$...,technician,Noor IV,2026-05-10
-chaimaealla2005@gmail.com,Alla Chaimae,$2b$12$SoM1IrTGhBYuP/LJxbT/.u0x5GlE3T1Fs/wt2aWs.1FagW2SCHITq,technician,Noor I,2026-05-13 02:10:58
-g.earthengine2025@gmail.com,Alla Mohamed,$2b$12$RsXsPAhFnFpdRtiVgnA4A.6x8nEwUIIw9ruN2y.Le6yK1NfWv4K0y,manager,Noor I,2026-05-13 02:14:13
+email,name,password_hash,role,zone,date_inscription,password,phone,created_at
+manager@solarthermal.com,Admin,$2b$12$...,manager,Noor IV,2026-05-10,,,
+tech_a@solarthermal.com,Technicien A,$2b$12$...,technician,Noor I,2026-05-10,,,
+tech_b@solarthermal.com,Technicien B,$2b$12$...,technician,Noor II,2026-05-10,,,
+tech_c@solarthermal.com,Technicien C,$2b$12$...,technician,Noor III,2026-05-10,,,
+tech_d@solarthermal.com,Technicien D,$2b$12$...,technician,Noor IV,2026-05-10,,,
+chaimaealla2005@gmail.com,Alla Chaimae,$2b$12$SoM1IrTGhBYuP/LJxbT/.u0x5GlE3T1Fs/wt2aWs.1FagW2SCHITq,technician,Noor I,2026-05-13 02:10:58,,,
+g.earthengine2025@gmail.com,Alla Mohamed,$2b$12$RsXsPAhFnFpdRtiVgnA4A.6x8nEwUIIw9ruN2y.Le6yK1NfWv4K0y,manager,Noor I,2026-05-13 02:14:13,,,
+kaoutar.com,kaoutar,,manager,Noor II,,kaoutar123,,2026-05-13
+chaimae.com,chaimae,,technician,Noor II,,chaimae123,,2026-05-13

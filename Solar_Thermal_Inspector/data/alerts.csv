@@ -28,7 +28,7 @@ id,defect_type,severity,temperature,location,image_path,detected_at,status,taken
 27,Crack,high,62.6,"Noor IV, Ligne 7, Colonne 9",data/simulated_images\defect_Crack_20260510_130422.png,2026-05-10 13:04:22,pending,,,Noor IV
 28,Shading,medium,52.3,"Noor IV, Ligne 2, Colonne 7",data/simulated_images\defect_Shading_20260510_131747.png,2026-05-10 13:17:49,pending,,,Noor IV
 29,Dust,low,41.5,"Noor IV, Ligne 2, Colonne 9",data/simulated_images\defect_Dust_20260510_131812.png,2026-05-10 13:18:12,pending,,,Noor IV
-30,HTFLeak,critical,103.7,"Noor II, Ligne 9, Colonne 12",data/simulated_images\defect_HTFLeak_20260510_132437.png,2026-05-10 13:24:39,pending,,,Noor II
+30,HTFLeak,critical,103.7,"Noor II, Ligne 9, Colonne 12",data/simulated_images\defect_HTFLeak_20260510_132437.png,2026-05-10 13:24:39,taken,chaimae,2026-05-13 15:31:34,Noor II
 31,HTFLeak,critical,104.8,"Noor II, Ligne 10, Colonne 12",data/simulated_images\defect_HTFLeak_20260510_132450.png,2026-05-10 13:24:50,taken,Assia,2026-05-10 15:06:40,Noor II
 32,StringReversedPolarity,high,69.6,"Midelt, Ligne 11, Colonne 3",data/simulated_images\defect_StringReversedPolarity_20260510_132502.png,2026-05-10 13:25:02,pending,,,Midelt
 33,ReceiverTubeLeak,critical,81.0,"Noor III, Ligne 2, Colonne 10",data/simulated_images\defect_ReceiverTubeLeak_20260510_132502.png,2026-05-10 13:25:02,pending,,,Noor III
@@ -74,3 +74,7 @@ id,defect_type,severity,temperature,location,image_path,detected_at,status,taken
 73,AbsorberTubeDegradation,critical,98.5,"Noor II, Ligne 8, Colonne 8",data/simulated_images\defect_AbsorberTubeDegradation_20260513_021310.png,2026-05-13 02:13:10,pending,,,Noor I
 74,StringReversedPolarity,high,71.9,"Midelt, Ligne 1, Colonne 1",data/simulated_images\defect_StringReversedPolarity_20260513_021814.png,2026-05-13 02:18:14,pending,,,Midelt
 75,Crack,high,66.2,"Noor IV, Ligne 5, Colonne 3",data/simulated_images\defect_Crack_20260513_022634.png,2026-05-13 02:26:36,pending,,,Noor IV
+76,Hotspot,critical,84.0,"Noor IV, Ligne 7, Colonne 2",data/simulated_images\defect_Hotspot_20260513_141323.png,2026-05-13 14:13:23,pending,,,Noor IV
+77,Shading,medium,58.6,"Noor IV, Ligne 2, Colonne 6",data/simulated_images\defect_Shading_20260513_150841.png,2026-05-13 15:08:41,pending,,,Noor IV
+78,AbsorberTubeDegradation,critical,93.6,"Noor II, Ligne 1, Colonne 8",data/simulated_images\defect_AbsorberTubeDegradation_20260513_153134.png,2026-05-13 15:31:34,pending,,,Noor I
+79,ReceiverTubeLeak,critical,82.1,"Noor III, Ligne 10, Colonne 11",data/simulated_images\defect_ReceiverTubeLeak_20260513_153142.png,2026-05-13 15:31:42,pending,,,Noor III

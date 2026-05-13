@@ -158,3 +158,6 @@ else:
             if st.button("❌ Annuler"):
                 st.session_state.show_edit_form = False
                 st.rerun()
+                # Ajouter ce bouton dans la page des missions du technicien
+if st.button("📝 Envoyer un rapport", use_container_width=True):
+    st.switch_page("pages/technician_report.py")
