@@ -4,18 +4,9 @@ import pandas as pd
 import os
 from datetime import datetime
 
-<<<<<<< HEAD
+
 USERS_FILE = "data/users.csv"
-=======
-# Clés utilisées dans session_state
-SESSION_KEYS = {
-    "logged_in": False,
-    "user_role": None,
-    "user_name": None,
-    "user_email": None,
-    "user_zone": None  # ← AJOUTÉ
-}
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403
+
 
 def init_session_state():
     """Initialise les variables de session"""
@@ -32,7 +23,7 @@ def init_session_state():
     if 'user_email' not in st.session_state:
         st.session_state.user_email = None
 
-<<<<<<< HEAD
+
 def init_users_db():
     """Initialise la base de données utilisateurs"""
     os.makedirs("data", exist_ok=True)
@@ -91,7 +82,7 @@ def authenticate_user(email, password):
 
 def login_user(email, name, role, zone="toutes"):
     """Connecte l'utilisateur directement"""
-=======
+
 def get_users_df():
     """
     Charge la liste des utilisateurs depuis le fichier CSV
@@ -194,16 +185,17 @@ def login_user(email, name, role, zone):
     """
     Connecte l'utilisateur en stockant ses informations
     """
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403
     st.session_state.logged_in = True
-    st.session_state.user = {"email": email, "name": name, "role": role, "zone": zone}
+    st.session_state.user = {
+        "email": email,
+        "name": name,
+        "role": role,
+        "zone": zone
+    }
     st.session_state.user_role = role
     st.session_state.user_zone = zone
-<<<<<<< HEAD
     st.session_state.user_name = name
     st.session_state.user_email = email
-=======
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403
 
 def logout_user():
     """Déconnecte l'utilisateur"""
@@ -215,28 +207,10 @@ def logout_user():
     st.session_state.user_email = None
 
 def is_logged_in():
-<<<<<<< HEAD
+
     """Vérifie si l'utilisateur est connecté"""
     return st.session_state.get('logged_in', False)
-=======
-    """
-    Vérifie si un utilisateur est connecté
-    """
-    return st.session_state.get("logged_in", False)
 
-def get_current_user():
-    """
-    Retourne les informations de l'utilisateur connecté
-    """
-    if is_logged_in():
-        return {
-            "email": st.session_state.user_email,
-            "name": st.session_state.user_name,
-            "role": st.session_state.user_role,
-            "zone": st.session_state.get('user_zone', 'Noor IV')
-        }
-    return None
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403
 
 def require_auth():
     """Vérifie que l'utilisateur est connecté"""
