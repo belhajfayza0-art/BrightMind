@@ -1,8 +1,1 @@
-<<<<<<< HEAD
-id,type,gravite,localisation,temperature,date_detection,statut,zone
-1,Hotspot récepteur,Critique,Tour-Nord,158,2026-05-10 10:30,Nouveau,Noor III
-2,Microfissure,Haute,L5-C3,89,2026-05-10 09:15,Assigné,Noor III
-3,Héliostat désaligné,Haute,Zone Sud-Est,95,2026-05-09 16:45,Nouveau,Noor III
-=======
-id,type,severity,location,temperature,image_path,detected_at,status
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403
+id,type,severity,location,temperature,image_path,detected_at,status,zone

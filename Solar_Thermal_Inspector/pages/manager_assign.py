@@ -57,7 +57,7 @@ def load_technicians():
 
 def load_missions():
     try:
-        return pd.read_csv("data/missions.csv")
+        return pd.read_csv("data/missions_manager.csv")
     except FileNotFoundError:
         return pd.DataFrame()
 
@@ -66,14 +66,14 @@ def save_defect(defects_df):
 
 def save_mission(mission):
     try:
-        missions = pd.read_csv("data/missions.csv")
+        missions = pd.read_csv("data/missions_manager.csv")
         new_id = len(missions) + 1
         mission['id'] = new_id
         missions = pd.concat([missions, pd.DataFrame([mission])], ignore_index=True)
-        missions.to_csv("data/missions.csv", index=False)
+        missions.to_csv("data/missions_manager.csv", index=False)
     except FileNotFoundError:
         mission['id'] = 1
-        pd.DataFrame([mission]).to_csv("data/missions.csv", index=False)
+        pd.DataFrame([mission]).to_csv("data/missions_manager.csv", index=False)
 
 defects = load_defects()
 techniciens = load_technicians()

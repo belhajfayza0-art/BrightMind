@@ -38,7 +38,11 @@ init_users_db()
 init_session_state()
 
 if is_logged_in():
-    st.switch_page("pages/technician_dashboard.py")
+    # Redirection selon le rôle
+    if st.session_state.user_role == 'manager':
+        st.switch_page("pages/manager_dashboard.py")
+    else:
+        st.switch_page("pages/technician_dashboard.py")
 
 # ============================================
 # CSS - SUPPRESSION TOTALE DES ESPACES
@@ -160,18 +164,6 @@ with col_form:
             padding: 0 !important;
             letter-spacing: 2px;
             text-align: center;
-<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
-        }
-        
-        .subtitle {
-            font-size: 0.8rem;
-            color: #6b8a7a;
-            margin: 0 0 1.5rem 0 !important;
-            padding: 0 0 0.3rem 0 !important;
-            border-bottom: 2px solid #dcda2c;
-            display: inline-block;
-=======
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
         }
         
         .label {
@@ -302,12 +294,6 @@ with col_form:
             height: 100vh !important;
             overflow: hidden !important;
         }
-<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
-        .right-content {
-            min-height: 100vh !important;
-        }
-=======
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
     </style>
     
     <div class="form-container">
@@ -332,15 +318,14 @@ with col_form:
             if email and password:
                 user = authenticate_user(email, password)
                 if user:
-<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
-                    login_user(user["email"], user["name"], user["role"], user.get("zone", "toutes"))
+                    login_user(user["email"], user["name"], user["role"], user.get("zone", "Noor IV"))
                     st.success(f"Bonjour {user['name']} !")
-                    st.switch_page("app.py")
-=======
-                    login_user(user["email"], user["name"], user["role"], user.get("zone", "zone_d"))
-                    st.success(f"Bonjour {user['name']} ! (Zone: {user.get('zone', 'zone_d')})")
-                    st.switch_page("pages/technician_dashboard.py")
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
+                    
+                    # Redirection selon le rôle
+                    if user['role'] == 'manager':
+                        st.switch_page("pages/manager_dashboard.py")
+                    else:
+                        st.switch_page("pages/technician_dashboard.py")
                 else:
                     st.error("Email ou mot de passe incorrect")
             else:
@@ -363,23 +348,9 @@ with col_form:
         st.markdown('<label class="label">RÔLE</label>', unsafe_allow_html=True)
         role = st.selectbox("Rôle", ["technician", "manager"], key="signup_role", label_visibility="collapsed")
         
-<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
-        # ===== NOUVEAU : Sélection de la ZONE =====
-        st.markdown('<label class="label">ZONE D’AFFECTATION</label>', unsafe_allow_html=True)
-        zone = st.selectbox("Zone", ZONES, key="signup_zone", label_visibility="collapsed")
-        st.caption("📍 La zone définit sur quel périmètre vous travaillerez")
-        
-        if st.button("Créer mon compte", type="primary", use_container_width=True, key="signup_btn"):
-=======
-        # AJOUT DU CHAMP ZONE
         st.markdown('<label class="label">ZONE</label>', unsafe_allow_html=True)
-        zone = st.selectbox(
-            "Zone", 
-            ["Noor I", "Noor II", "Noor III", "Noor IV", "Midelt"], 
-            key="signup_zone", 
-            label_visibility="collapsed"
-        )
-
+        zone = st.selectbox("Zone", ZONES, key="signup_zone", label_visibility="collapsed")
+        
         zone_info = {
             "Noor I": "🔧 Centrale Noor I (CSP - Miroirs paraboliques) - 160 MW",
             "Noor II": "🔧 Centrale Noor II (CSP - Miroirs paraboliques) - 200 MW",
@@ -390,7 +361,6 @@ with col_form:
         st.caption(zone_info.get(zone, ""))
         
         if st.button("Créer mon compte", type="primary", use_container_width=True):
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
             if name and email_su and pwd:
                 if pwd != pwd2:
                     st.error("Les mots de passe ne correspondent pas")
@@ -406,22 +376,16 @@ with col_form:
             else:
                 st.warning("Veuillez remplir tous les champs")
     
-    # Comptes démo (mis à jour avec les zones)
+    # Comptes démo
     st.markdown("""
     <div class="demo-box">
         <div class="demo-title">🔐 COMPTES DE DÉMONSTRATION</div>
-<<<<<<< HEAD:Solar_Thermal_Inspector/pages/login.py
-        <div class="demo-text">👔 SUPER MANAGER : admin@solarthermal.com / admin123 (Toutes zones)</div>
-        <div class="demo-text">📊 MANAGER Noor III : karim@noor3.com / manager123</div>
-        <div class="demo-text">🔧 TECHNICIEN Noor III : hassan@noor3.com / tech123</div>
-        <div class="demo-text" style="margin-top:8px;">📍 Zones disponibles : Noor I, Noor II, Noor III, Noor IV, Midelt</div>
-=======
         <div class="demo-text">👔 MANAGER : manager@solarthermal.com / manager123</div>
-        <div class="demo-text">🔧 TECHNICIEN A (Zone A) : tech_a@solarthermal.com / tech123</div>
-        <div class="demo-text">🔧 TECHNICIEN B (Zone B) : tech_b@solarthermal.com / tech123</div>
-        <div class="demo-text">🔧 TECHNICIEN C (Zone C) : tech_c@solarthermal.com / tech123</div>
-        <div class="demo-text">🔧 TECHNICIEN D (Zone D) : tech_d@solarthermal.com / tech123</div>
->>>>>>> 36d60e569bec30b38258e9d7d9f2a8c5f0129403:Solar_Thermal_Inspector/login.py
+        <div class="demo-text">🔧 TECHNICIEN Noor I : tech_a@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN Noor II : tech_b@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN Noor III : tech_c@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN Noor IV : tech_d@solarthermal.com / tech123</div>
+        <div class="demo-text">🔧 TECHNICIEN Midelt : tech_midelt@solarthermal.com / tech123</div>
     </div>
     <div class="footer">© 2025 Solar Thermal Inspector</div>
     </div>

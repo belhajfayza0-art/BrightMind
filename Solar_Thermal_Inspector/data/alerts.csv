@@ -36,7 +36,7 @@ id,defect_type,severity,temperature,location,image_path,detected_at,status,taken
 35,ThermalGradientAnomaly,medium,64.6,"Noor III, Ligne 8, Colonne 1",data/simulated_images\defect_ThermalGradientAnomaly_20260510_132506.png,2026-05-10 13:25:06,pending,,,Noor III
 36,AbsorberTubeDegradation,critical,84.8,"Noor II, Ligne 2, Colonne 10",data/simulated_images\defect_AbsorberTubeDegradation_20260510_132508.png,2026-05-10 13:25:08,taken,Alla Chaimae,2026-05-10 15:48:00,Noor I
 37,Crack,high,73.8,"Midelt, Ligne 4, Colonne 9",data/simulated_images\defect_Crack_20260510_132515.png,2026-05-10 13:25:15,pending,,,Noor IV
-38,MirrorMisalignment,high,76.2,"Noor II, Ligne 7, Colonne 5",data/simulated_images\defect_MirrorMisalignment_20260510_132548.png,2026-05-10 13:25:49,pending,,,Noor I
+38,MirrorMisalignment,high,76.2,"Noor II, Ligne 7, Colonne 5",data/simulated_images\defect_MirrorMisalignment_20260510_132548.png,2026-05-10 13:25:49,taken,Alla Chaimae,2026-05-13 02:12:30,Noor I
 39,TrackingFailure,high,59.4,"Noor III, Ligne 11, Colonne 10",data/simulated_images\defect_TrackingFailure_20260510_132549.png,2026-05-10 13:25:49,pending,,,Noor III
 40,Broken Cell,critical,94.7,"Noor IV, Ligne 3, Colonne 13",data/simulated_images\defect_Broken Cell_20260510_132638.png,2026-05-10 13:26:40,pending,,,Noor IV
 41,MirrorMisalignment,high,66.4,"Noor II, Ligne 4, Colonne 1",data/simulated_images\defect_MirrorMisalignment_20260510_132647.png,2026-05-10 13:26:48,pending,,,Noor I
@@ -57,7 +57,7 @@ id,defect_type,severity,temperature,location,image_path,detected_at,status,taken
 56,TrackingFailure,high,61.4,"Noor III, Ligne 3, Colonne 6",data/simulated_images\defect_TrackingFailure_20260510_151913.png,2026-05-10 15:19:13,pending,,,Noor III
 57,MirrorMisalignment,high,62.2,"Noor I, Ligne 4, Colonne 6",data/simulated_images\defect_MirrorMisalignment_20260510_153228.png,2026-05-10 15:32:30,pending,,,Noor I
 58,Crack,high,60.8,"Midelt, Ligne 10, Colonne 13",data/simulated_images\defect_Crack_20260510_153500.png,2026-05-10 15:35:00,pending,,,Noor IV
-59,AbsorberTubeDegradation,critical,81.0,"Noor I, Ligne 4, Colonne 11",data/simulated_images\defect_AbsorberTubeDegradation_20260510_153500.png,2026-05-10 15:35:00,pending,,,Noor I
+59,AbsorberTubeDegradation,critical,81.0,"Noor I, Ligne 4, Colonne 11",data/simulated_images\defect_AbsorberTubeDegradation_20260510_153500.png,2026-05-10 15:35:00,taken,Alla Chaimae,2026-05-13 02:12:35,Noor I
 60,StringOpenCircuit,critical,83.7,"Midelt, Ligne 9, Colonne 5",data/simulated_images\defect_StringOpenCircuit_20260510_153504.png,2026-05-10 15:35:04,pending,,,Midelt
 61,Hotspot,critical,78.5,"Midelt, Ligne 10, Colonne 7",data/simulated_images\defect_Hotspot_20260510_154512.png,2026-05-10 15:45:12,pending,,,Noor IV
 62,TrackingFailure,high,73.9,"Noor III, Ligne 12, Colonne 11",data/simulated_images\defect_TrackingFailure_20260510_154512.png,2026-05-10 15:45:12,pending,,,Noor III
@@ -66,4 +66,11 @@ id,defect_type,severity,temperature,location,image_path,detected_at,status,taken
 65,HTFLeak,critical,88.6,"Noor II, Ligne 12, Colonne 2",data/simulated_images\defect_HTFLeak_20260510_154738.png,2026-05-10 15:47:38,pending,,,Noor II
 66,Broken Cell,critical,92.3,"Noor IV, Ligne 5, Colonne 3",data/simulated_images\defect_Broken Cell_20260510_154752.png,2026-05-10 15:47:52,pending,,,Noor IV
 67,StringReversedPolarity,high,69.8,"Midelt, Ligne 1, Colonne 2",data/simulated_images\defect_StringReversedPolarity_20260510_154828.png,2026-05-10 15:48:29,pending,,,Midelt
-68,AbsorberTubeDegradation,critical,96.2,"Noor I, Ligne 12, Colonne 13",data/simulated_images\defect_AbsorberTubeDegradation_20260510_154914.png,2026-05-10 15:49:14,pending,,,Noor I
+68,AbsorberTubeDegradation,critical,96.2,"Noor I, Ligne 12, Colonne 13",data/simulated_images\defect_AbsorberTubeDegradation_20260510_154914.png,2026-05-10 15:49:14,taken,Alla Chaimae,2026-05-13 02:12:41,Noor I
+69,AbsorberTubeDegradation,critical,91.5,"Noor I, Ligne 9, Colonne 13",data/simulated_images\defect_AbsorberTubeDegradation_20260513_021158.png,2026-05-13 02:11:58,pending,,,Noor I
+70,Dust,low,42.2,"Noor IV, Ligne 12, Colonne 4",data/simulated_images\defect_Dust_20260513_021230.png,2026-05-13 02:12:30,pending,,,Noor IV
+71,AbsorberTubeDegradation,critical,96.7,"Noor I, Ligne 9, Colonne 6",data/simulated_images\defect_AbsorberTubeDegradation_20260513_021244.png,2026-05-13 02:12:44,pending,,,Noor I
+72,MirrorMisalignment,high,77.4,"Noor II, Ligne 7, Colonne 11",data/simulated_images\defect_MirrorMisalignment_20260513_021307.png,2026-05-13 02:13:07,pending,,,Noor I
+73,AbsorberTubeDegradation,critical,98.5,"Noor II, Ligne 8, Colonne 8",data/simulated_images\defect_AbsorberTubeDegradation_20260513_021310.png,2026-05-13 02:13:10,pending,,,Noor I
+74,StringReversedPolarity,high,71.9,"Midelt, Ligne 1, Colonne 1",data/simulated_images\defect_StringReversedPolarity_20260513_021814.png,2026-05-13 02:18:14,pending,,,Midelt
+75,Crack,high,66.2,"Noor IV, Ligne 5, Colonne 3",data/simulated_images\defect_Crack_20260513_022634.png,2026-05-13 02:26:36,pending,,,Noor IV
