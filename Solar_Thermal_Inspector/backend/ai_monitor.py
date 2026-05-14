@@ -44,12 +44,6 @@ DEFECTS_BY_ZONE = {
 ALL_ZONES = ["Noor I", "Noor II", "Noor III", "Noor IV", "Midelt"]
 
 def simulate_ai_detection(zone=None):
-    """
-    Simule la détection d'un défaut par l'IA
-    Si zone est spécifié, crée une alerte pour cette zone
-    Sinon, choisit une zone aléatoire
-    """
-    
     # Choisir une zone aléatoire si non spécifiée
     if zone is None:
         zone = random.choice(ALL_ZONES)
@@ -68,7 +62,6 @@ def simulate_ai_detection(zone=None):
     
     # Générer une image (optionnel)
     from backend.mock_ai_analyzer import generate_defect_image
-    # Créer un objet defect_type simulé pour generate_defect_image
     mock_defect = {
         "name": defect_type["name"],
         "color": (255, 50, 50) if defect_type["severity"] == "critical" else (255, 150, 50),
@@ -81,7 +74,6 @@ def simulate_ai_detection(zone=None):
     except:
         image_path = ""
     
-    # Créer l'alerte
     defect = {
         'defect_type': defect_type["name"],
         'severity': defect_type["severity"],
@@ -90,12 +82,14 @@ def simulate_ai_detection(zone=None):
         'image_path': image_path
     }
     
-    alert_id = create_alert(defect)
+    from backend.alert_service import process_new_defect
+    result = process_new_defect(defect)
     
     return {
-        'alert_id': alert_id,
+        'alert_id': result.get('alert_id'),
         'defect': defect,
-        'zone': zone
+        'zone': zone,
+        'status': result['status']
     }
 
 def simulate_detection_for_zone(zone):

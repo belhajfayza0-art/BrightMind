@@ -1,5 +1,17 @@
-id,defect_id,technician_id,technician_name,defect_type,severity,location,temperature,status,zone,created_at,completed_at,notes
-1,1,1,Alla Chaimae,MirrorMisalignment,high,"Noor II, Ligne 7, Colonne 5",76.2,pending,Noor I,2026-05-13 02:12:30,,
-2,2,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor I, Ligne 4, Colonne 11",81.0,pending,Noor I,2026-05-13 02:12:35,,
-3,3,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor I, Ligne 12, Colonne 13",96.2,completed,Noor I,2026-05-13 02:12:41,2026-05-13 02:13:01,Intervention terminée
-4,4,1,chaimae,HTFLeak,critical,"Noor II, Ligne 9, Colonne 12",103.7,pending,Noor II,2026-05-13 15:31:34,,
+id,defect_id,technician_id,technician_name,defect_type,severity,location,temperature,status,zone,created_at,completed_at,notes,assigned_by
+1,1,1,Technicien B,HTFLeak,critical,"Noor II, Ligne 10, Colonne 11",99.3,pending,Noor II,2026-05-14 02:12:48,,,IA
+2,2,1,Technicien D,Broken Cell,critical,"Noor IV, Ligne 1, Colonne 4",80.5,pending,Noor IV,2026-05-14 02:13:19,,,IA
+3,3,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor I, Ligne 6, Colonne 13",99.9,completed,Noor I,2026-05-14 02:13:22,2026-05-14 02:13:49,Intervention terminée,Manager
+4,4,1,Technicien D,Broken Cell,critical,"Noor IV, Ligne 8, Colonne 7",91.6,pending,Noor IV,2026-05-14 02:13:22,,,IA
+5,5,1,Technicien C,ReceiverTubeLeak,critical,"Noor III, Ligne 9, Colonne 1",81.6,pending,Noor III,2026-05-14 02:15:20,,,IA
+6,6,1,Technicien B,HTFLeak,critical,"Noor II, Ligne 11, Colonne 9",86.2,pending,Noor II,2026-05-14 02:17:09,,,IA
+7,7,1,Technicien C,TrackingFailure,high,"Noor III, Ligne 2, Colonne 11",61.6,pending,Noor III,2026-05-14 02:18:15,,,IA
+8,8,1,Technicien C,TrackingFailure,high,"Noor III, Ligne 6, Colonne 12",71.5,pending,Noor III,2026-05-14 02:20:22,,,IA
+9,9,1,Technicien A,AbsorberTubeDegradation,critical,"Noor I, Ligne 4, Colonne 3",84.9,pending,Noor I,2026-05-14 02:23:05,,,IA
+10,10,1,Alla Chaimae,AbsorberTubeDegradation,critical,"Noor II, Ligne 9, Colonne 12",93.1,pending,Noor I,2026-05-14 02:23:16,,,IA
+11,11,1,tech4,Hotspot,critical,"Noor IV, Ligne 4, Colonne 10",76.6,pending,Noor IV,2026-05-14 02:24:54,,,IA
+12,12,1,Technicien C,ReceiverTubeLeak,critical,"Noor III, Ligne 3, Colonne 7",92.7,pending,Noor III,2026-05-14 02:24:54,,,IA
+13,13,1,Technicien C,TrackingFailure,high,"Noor III, Ligne 11, Colonne 6",74.5,pending,Noor III,2026-05-14 02:27:52,,,IA
+14,14,1,Technicien A,MirrorMisalignment,high,"Noor II, Ligne 5, Colonne 3",72.8,pending,Noor I,2026-05-14 02:30:54,,,IA
+15,15,1,Technicien C,ThermalGradientAnomaly,medium,"Noor III, Ligne 5, Colonne 12",51.3,pending,Noor III,2026-05-14 02:31:29,,,IA
+16,16,1,tech4,Crack,high,"Noor IV, Ligne 5, Colonne 8",61.1,pending,Noor IV,2026-05-14 02:32:08,,,IA

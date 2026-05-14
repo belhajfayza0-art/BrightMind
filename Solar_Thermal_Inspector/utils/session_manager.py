@@ -6,7 +6,13 @@ from datetime import datetime
 
 # Fichier CSV des utilisateurs
 USERS_FILE = "data/users.csv"
-
+SESSION_KEYS = {
+    "logged_in": False,
+    "user_role": None,
+    "user_name": None,
+    "user_email": None,
+    "user_zone": None
+}
 def init_session_state():
     """Initialise les variables de session"""
     if 'logged_in' not in st.session_state:
@@ -87,15 +93,21 @@ def login_user(email, name, role, zone="toutes"):
     st.session_state.user_zone = zone
     st.session_state.user_name = name
     st.session_state.user_email = email
+    
+    # Enregistrer la session active pour les managers
+    if role == 'manager':
+        from utils.session_tracker import register_session
+        register_session(email, name, role, zone)
 
 def logout_user():
     """Déconnecte l'utilisateur"""
-    st.session_state.logged_in = False
-    st.session_state.user = None
-    st.session_state.user_role = None
-    st.session_state.user_zone = None
-    st.session_state.user_name = None
-    st.session_state.user_email = None
+    # Supprimer la session active
+    if st.session_state.get('user_email') and st.session_state.get('user_role') == 'manager':
+        from utils.session_tracker import unregister_session
+        unregister_session(st.session_state.user_email)
+    
+    for key in SESSION_KEYS.keys():
+        st.session_state[key] = SESSION_KEYS[key]
 
 def is_logged_in():
     """Vérifie si l'utilisateur est connecté"""
