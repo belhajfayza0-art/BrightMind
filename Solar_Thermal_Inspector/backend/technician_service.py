@@ -28,6 +28,8 @@ def init_data_files():
             'location': pd.Series(dtype='str'),
             'temperature': pd.Series(dtype='float64'),
             'status': pd.Series(dtype='str'),
+            'zone': pd.Series(dtype='str'),
+            'assigned_by': pd.Series(dtype='str'),  # NOUVEAU
             'created_at': pd.Series(dtype='str'),
             'completed_at': pd.Series(dtype='str'),
             'notes': pd.Series(dtype='str')
@@ -170,12 +172,11 @@ def mark_all_notifications_read(technician_name):
     df.loc[df['technician_name'] == technician_name, 'read'] = True
     df.to_csv(NOTIFICATIONS_FILE, index=False)
 
-def create_mission(defect, technician_name, zone):
-    """Crée une nouvelle mission avec la zone"""
+def create_mission(defect, technician_name, zone, assigned_by="IA"):
+    """Crée une nouvelle mission (assignée par IA ou Manager)"""
     init_data_files()
     
     df = pd.read_csv(MISSIONS_FILE)
-    
     new_id = len(df) + 1 if len(df) > 0 else 1
     
     new_mission = pd.DataFrame([{
@@ -189,6 +190,7 @@ def create_mission(defect, technician_name, zone):
         'temperature': defect['temperature'],
         'status': 'pending',
         'zone': zone,
+        'assigned_by': assigned_by,  # "IA" ou "Manager"
         'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         'completed_at': '',
         'notes': ''

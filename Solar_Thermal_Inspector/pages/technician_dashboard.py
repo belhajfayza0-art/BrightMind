@@ -96,24 +96,19 @@ render_sidebar(technician_name)
 # ============================================
 # ALERTE IA (FILTRÉE PAR ZONE)
 # ============================================
-# ============================================
-# ALERTE IA - Version finale
-# ============================================
+# Remplacer l'appel aux alertes par :
+assigned_missions = get_technician_missions_by_zone(technician_name, technician_zone)
+nb_missions = len(assigned_missions[assigned_missions['status'].isin(['pending', 'in_progress'])])
 
-# Compter les alertes
-alerts_df = get_pending_alerts_by_zone(technician_zone)
-nb_alerts = len(alerts_df)
-
-if nb_alerts > 0:
-    # Utiliser les colonnes pour aligner message et bouton
+if nb_missions > 0:
     col_msg, col_btn = st.columns([3, 1])
     with col_msg:
-        st.error(f"🚨 {nb_alerts} ALERTE(S) IA DÉTECTÉE(S) ! Intervention requise.")
+        st.warning(f"📋 {nb_missions} mission(s) assignée(s) dans votre zone {technician_zone}")
     with col_btn:
-        if st.button("📋 VOIR LES ALERTES", type="primary", use_container_width=True):
-            st.switch_page("pages/technician_alerts.py")
+        if st.button("📋 VOIR MES MISSIONS", type="primary"):
+            st.switch_page("pages/technician_missions.py")
 else:
-    st.success("✅ Aucune alerte IA. Tous les panneaux fonctionnent normalement.")
+    st.success(f"✅ Aucune mission assignée dans votre zone {technician_zone}")
 
 # ============================================
 # CARTE DE BIENVENUE
